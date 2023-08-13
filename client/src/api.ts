@@ -1,10 +1,28 @@
 import axios, { AxiosResponse } from "axios";
 import { Post, PostFormValues } from "./models/Post";
+import { User, UserFormValues } from "./models/User";
+import { store } from "./store/store";
+
+const sleep = (delay: number) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+};
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-//axios.defaults.baseURL = "http://localhost:5000/api";
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
+
+axios.interceptors.response.use(async (response) => {
+  if (process.env.NODE_ENV === "development") await sleep(1000);
+  return response;
+});
+
+axios.interceptors.request.use((config) => {
+  const token = store.appStore.token;
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
 
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
@@ -21,8 +39,16 @@ const Posts = {
   delete: (id: string) => requests.del<void>(`/posts/${id}`),
 };
 
+const Account = {
+  current: () => requests.get<User>("/account"),
+  login: (user: UserFormValues) => requests.post<User>("/account/login", user),
+  register: (user: UserFormValues) =>
+    requests.post<User>("/account/register", user),
+};
+
 const api = {
   Posts,
+  Account,
 };
 
 export default api;

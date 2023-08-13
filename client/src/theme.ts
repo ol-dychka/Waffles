@@ -1,3 +1,4 @@
+import { Palette } from "@mui/icons-material";
 import { PaletteMode, ThemeOptions } from "@mui/material";
 
 // color design tokens export
@@ -48,6 +49,9 @@ export const themeSettings = (mode: PaletteMode) => {
               main: colorTokens.grey[500],
               light: colorTokens.grey[700],
             },
+            zalupa: {
+              dark: colorTokens.grey[100],
+            },
           }
         : {
             // palette values for light mode
@@ -60,6 +64,9 @@ export const themeSettings = (mode: PaletteMode) => {
               dark: colorTokens.grey[700],
               main: colorTokens.grey[200],
               light: colorTokens.grey[50],
+            },
+            zalupa: {
+              dark: colorTokens.grey[100],
             },
           }),
     },

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
 import {
@@ -15,6 +15,8 @@ import FlexBetween from "../../components/FlexBetween";
 import { Post } from "../../models/Post";
 import { CampaignOutlined, FavoriteBorderOutlined } from "@mui/icons-material";
 import { formatDistance } from "date-fns";
+import { router } from "../../layout/Routes";
+import LoadingComponent from "../../components/LoadingComponent";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -32,9 +34,7 @@ const PostDetails = () => {
     };
   }, [id, clearSelectedPost, loadPost]);
 
-  const navigate = useNavigate();
-
-  if (!post) return <div>Loading...</div>;
+  if (!post) return <LoadingComponent text="Loading Post" />;
 
   return (
     <Box bgcolor="secondary.light" borderRadius="1rem" padding="1rem" mt="3rem">
@@ -85,7 +85,7 @@ const PostDetails = () => {
       </FlexBetween>
       <Divider />
       <Box
-        onClick={() => navigate(`/posts/${post.id}`)}
+        onClick={() => router.navigate(`/posts/${post.id}`)}
         sx={{
           "&:hover": {
             cursor: "pointer",

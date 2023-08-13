@@ -8,16 +8,16 @@ import {
 import React from "react";
 import { Post } from "../../models/Post";
 import FlexBetween from "../../components/FlexBetween";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { formatDistance } from "date-fns";
 import { Image } from "@mui/icons-material";
+import { router } from "../../layout/Routes";
 
 type Props = {
   post: Post;
 };
 
 const PostCard = ({ post }: Props) => {
-  const navigate = useNavigate();
   const theme = useTheme();
   return (
     <Box bgcolor="secondary.light" borderRadius="1rem" padding="1rem" mt="3rem">
@@ -68,7 +68,7 @@ const PostCard = ({ post }: Props) => {
       </FlexBetween>
       <Divider />
       <Box
-        onClick={() => navigate(`/posts/${post.id}`)}
+        onClick={() => router.navigate(`/posts/${post.id}`)}
         sx={{
           "&:hover": {
             cursor: "pointer",

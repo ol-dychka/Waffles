@@ -25,6 +25,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Create.Command { Post = post }));
         }
 
+        [Authorize(Policy = "IsPostCreator")]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditPost(Guid id, Post post)
         {
@@ -32,10 +33,17 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Post = post }));
         }
 
+        [Authorize(Policy = "IsPostCreator")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePost(Guid id)
         {
             return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+
+        [HttpPost("{id}/like")]
+        public async Task<IActionResult> Like(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateLike.Command { Id = id }));
         }
     }
 }

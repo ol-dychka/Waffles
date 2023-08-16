@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,12 +11,29 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230815004008_UserPostLikes")]
+    partial class UserPostLikes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
+
+            modelBuilder.Entity("AppUserPost", b =>
+                {
+                    b.Property<string>("LikesId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("PostsId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("LikesId", "PostsId");
+
+                    b.HasIndex("PostsId");
+
+                    b.ToTable("AppUserPost");
+                });
 
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
@@ -87,21 +105,6 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Like", b =>
-                {
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("PostId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AppUserId", "PostId");
-
-                    b.HasIndex("PostId");
-
-                    b.ToTable("Likes");
-                });
-
             modelBuilder.Entity("Domain.Post", b =>
                 {
                     b.Property<Guid>("Id")
@@ -109,9 +112,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Category")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatorId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -127,8 +127,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Posts");
                 });
@@ -261,32 +259,19 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Like", b =>
+            modelBuilder.Entity("AppUserPost", b =>
                 {
-                    b.HasOne("Domain.AppUser", "AppUser")
+                    b.HasOne("Domain.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("AppUserId")
+                        .HasForeignKey("LikesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Post", "Post")
-                        .WithMany("Likes")
-                        .HasForeignKey("PostId")
+                    b.HasOne("Domain.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("AppUser");
-
-                    b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Domain.Post", b =>
-                {
-                    b.HasOne("Domain.AppUser", "Creator")
-                        .WithMany("Posts")
-                        .HasForeignKey("CreatorId");
-
-                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -338,16 +323,6 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Domain.AppUser", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
-            modelBuilder.Entity("Domain.Post", b =>
-                {
-                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }

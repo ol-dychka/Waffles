@@ -3,30 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Posts
 {
     public class Single
     {
-        public class Query : IRequest<Result<Post>>
+        public class Query : IRequest<Result<PostDto>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Result<Post>>
+        public class Handler : IRequestHandler<Query, Result<PostDto>>
         {
             private readonly DataContext _context;
-            public Handler(DataContext context)
+            private readonly IMapper _mapper;
+            public Handler(DataContext context, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
             }
 
-            public async Task<Result<Post>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PostDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return Result<Post>.Success(await _context.Posts.FindAsync(request.Id));
+                var post = await _context.Posts
+                    .ProjectTo<PostDto>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+
+                return Result<PostDto>.Success(post);
             }
         }
     }

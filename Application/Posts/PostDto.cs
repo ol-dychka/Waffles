@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Profiles;
 
-namespace Domain
+namespace Application.Posts
 {
-    public class Post
+    public class PostDto
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -13,8 +14,7 @@ namespace Domain
         public string Description { get; set; }
         public string Category { get; set; }
         public string Image { get; set; }
-        public AppUser Creator { get; set; }
-        public ICollection<Like> Likes { get; set; } = new List<Like>();
-        // likes + comments
+        public string CreatorUsername { get; set; }
+        public ICollection<Profile> Likes { get; set; }
     }
 }

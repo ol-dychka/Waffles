@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230816003942_AppUserPostRelationship")]
+    partial class AppUserPostRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -87,7 +90,7 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Like", b =>
+            modelBuilder.Entity("Domain.AppUserPost", b =>
                 {
                     b.Property<string>("AppUserId")
                         .HasColumnType("TEXT");
@@ -95,11 +98,14 @@ namespace Persistence.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsCreator")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("AppUserId", "PostId");
 
                     b.HasIndex("PostId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("AppUserPost");
                 });
 
             modelBuilder.Entity("Domain.Post", b =>
@@ -109,9 +115,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Category")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatorId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
@@ -127,8 +130,6 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatorId");
 
                     b.ToTable("Posts");
                 });
@@ -261,10 +262,10 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Like", b =>
+            modelBuilder.Entity("Domain.AppUserPost", b =>
                 {
                     b.HasOne("Domain.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -278,15 +279,6 @@ namespace Persistence.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("Post");
-                });
-
-            modelBuilder.Entity("Domain.Post", b =>
-                {
-                    b.HasOne("Domain.AppUser", "Creator")
-                        .WithMany("Posts")
-                        .HasForeignKey("CreatorId");
-
-                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

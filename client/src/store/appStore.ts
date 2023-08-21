@@ -2,6 +2,7 @@ import { PaletteMode } from "@mui/material";
 import { makeAutoObservable, reaction } from "mobx";
 
 export default class appStore {
+  // persist mode in cookie
   mode: PaletteMode = "light";
   token: string | null = localStorage.getItem("jwt");
   appLoaded = false;

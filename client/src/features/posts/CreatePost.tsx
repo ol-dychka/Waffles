@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  Divider,
   FormControl,
   InputLabel,
   MenuItem,
@@ -10,12 +9,13 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Form, Formik, FormikFormProps, FormikProps } from "formik";
+import { Form, Formik } from "formik";
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { Category, PostFormValues } from "../../models/Post";
 import { useStore } from "../../store/store";
 import FlexBetween from "../../components/FlexBetween";
+import StyledBox from "../../components/StyledBox";
 
 type Props = {};
 
@@ -50,8 +50,8 @@ const CreatePost = (props: Props) => {
 
   const theme = useTheme();
   return (
-    <Box bgcolor="secondary.light" borderRadius="1rem" padding="1rem" mt="1rem">
-      <Typography variant="h3">Post your own ideas</Typography>
+    <StyledBox mb="2rem">
+      <Typography variant="h4">Post your own ideas</Typography>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -111,6 +111,9 @@ const CreatePost = (props: Props) => {
                       borderRadius: "1rem",
                       bgcolor: theme.palette.secondary.main,
                       color: theme.palette.secondary.contrastText,
+                      "&:hover": {
+                        bgcolor: theme.palette.secondary.light,
+                      },
                     }}
                   >
                     Cancel
@@ -120,7 +123,10 @@ const CreatePost = (props: Props) => {
                     sx={{
                       borderRadius: "1rem",
                       bgcolor: theme.palette.primary.main,
-                      color: theme.palette.secondary.contrastText,
+                      color: theme.palette.primary.contrastText,
+                      "&:hover": {
+                        bgcolor: theme.palette.primary.dark,
+                      },
                     }}
                   >
                     Post
@@ -131,7 +137,7 @@ const CreatePost = (props: Props) => {
           </Form>
         )}
       </Formik>
-    </Box>
+    </StyledBox>
   );
 };
 

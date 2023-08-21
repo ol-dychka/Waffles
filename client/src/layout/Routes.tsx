@@ -5,6 +5,7 @@ import { createBrowserRouter } from "react-router-dom";
 import PostDetails from "../features/posts/PostDetails";
 import RequireAuthentication from "./RequireAuthentication";
 import WelcomePage from "../features/login/WelcomePage";
+import ProfilePage from "../features/profile/ProfilePage";
 
 export const routes: RouteObject[] = [
   {
@@ -16,6 +17,7 @@ export const routes: RouteObject[] = [
         children: [
           { path: "/", element: <PostsDashboard /> },
           { path: "posts/:id", element: <PostDetails /> },
+          { path: "profiles/:username", element: <ProfilePage /> },
         ],
       },
       { path: "/welcome", element: <WelcomePage /> },

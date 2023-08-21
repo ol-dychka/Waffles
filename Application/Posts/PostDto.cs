@@ -14,7 +14,7 @@ namespace Application.Posts
         public string Description { get; set; }
         public string Category { get; set; }
         public string Image { get; set; }
-        public string CreatorUsername { get; set; }
+        public Profile Creator { get; set; }
         public ICollection<Profile> Likes { get; set; }
     }
 }

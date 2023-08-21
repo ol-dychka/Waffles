@@ -1,4 +1,3 @@
-import { useTheme } from "@emotion/react";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import React from "react";
 
@@ -7,18 +6,16 @@ type Props = {
 };
 
 const LoadingComponent = ({ text }: Props) => {
-  const theme = useTheme();
   return (
     <Box
-      height="100%"
+      height="100vh"
       width="100%"
       display="flex"
+      flexDirection="column"
       justifyContent="center"
       alignItems="center"
     >
-      <Box>
-        <CircularProgress color="inherit" />
-      </Box>
+      <CircularProgress color="inherit" />
       <Typography>{text}</Typography>
     </Box>
   );

@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { Post, PostFormValues } from "./models/Post";
 import { User, UserFormValues } from "./models/User";
 import { store } from "./store/store";
+import { Profile } from "./models/Profile";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -37,6 +38,7 @@ const Posts = {
   single: (id: string) => requests.get<Post>(`/posts/${id}`),
   create: (post: PostFormValues) => requests.post<void>("/posts", post),
   delete: (id: string) => requests.del<void>(`/posts/${id}`),
+  like: (id: string) => requests.post<void>(`/posts/${id}/like`, {}),
 };
 
 const Account = {
@@ -46,9 +48,16 @@ const Account = {
     requests.post<User>("/account/register", user),
 };
 
+const Profiles = {
+  get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
+  posts: (username: string) =>
+    requests.get<Post[]>(`/profiles/${username}/posts`),
+};
+
 const api = {
   Posts,
   Account,
+  Profiles,
 };
 
 export default api;

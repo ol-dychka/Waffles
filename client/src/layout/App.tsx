@@ -1,27 +1,21 @@
 import { ThemeProvider } from "@emotion/react";
-import FlexBetween from "../components/FlexBetween";
-import {
-  Container,
-  CssBaseline,
-  Palette,
-  PaletteMode,
-  Typography,
-  createTheme,
-} from "@mui/material";
+import { Box, CssBaseline, createTheme } from "@mui/material";
 import { useEffect, useMemo } from "react";
 import { themeSettings } from "../theme";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router";
 import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
-import LoadingComponent from "../components/LoadingComponent";
+import LoadingComponent from "../features/common/LoadingComponent";
 
 function App() {
   const {
     appStore: { mode, token, appLoaded, setAppLoaded },
-    userStore: { isLogged, getUser, user },
+    userStore: { isLogged, getUser },
   } = useStore();
+
   const colorMode = mode;
+
   const theme = useMemo(
     () => createTheme(themeSettings(colorMode)),
     [colorMode]
@@ -33,7 +27,7 @@ function App() {
     } else {
       setAppLoaded();
     }
-  }, [token, getUser]);
+  }, [token, getUser, setAppLoaded]);
 
   if (!appLoaded) {
     return <LoadingComponent text="App is Loading" />;
@@ -43,9 +37,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {isLogged && <Navbar />}
-      <Container>
+      <Box padding="1rem 6%">
         <Outlet />
-      </Container>
+      </Box>
     </ThemeProvider>
   );
 }

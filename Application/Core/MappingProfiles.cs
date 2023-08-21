@@ -9,14 +9,16 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Post, Post>();
-            CreateMap<Post, PostDto>()
-                .ForMember(d => d.CreatorUsername, o => o.MapFrom(s => s.Creator.UserName));
+            CreateMap<Post, PostDto>();
+            //.ForMember(d => d.Creator, o => o.MapFrom(s => s.Creator));
             // for likes on posts so thay can display as icons with username,
             // displayname & image. don't really need bio, but whatever
             CreateMap<Like, Profiles.Profile>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
                 .ForMember(d => d.Bio, o => o.MapFrom(s => s.AppUser.Bio));
+            CreateMap<AppUser, Profiles.Profile>()
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.UserName));
         }
     }
 }

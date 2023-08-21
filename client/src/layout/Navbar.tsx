@@ -3,16 +3,13 @@ import FlexBetween from "../components/FlexBetween";
 import {
   Avatar,
   Box,
-  Button,
   Divider,
-  Icon,
   IconButton,
   ListItemIcon,
   Menu,
   MenuItem,
   Tooltip,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../store/store";
@@ -24,6 +21,7 @@ import {
   Logout,
   PersonAdd,
   Settings,
+  ArrowDropDownOutlined,
 } from "@mui/icons-material";
 import { router } from "./Routes";
 
@@ -32,10 +30,8 @@ type Props = {};
 const Navbar = (props: Props) => {
   const {
     appStore: { mode, changeMode },
-    userStore: { logout },
+    userStore: { logout, user },
   } = useStore();
-
-  const theme = useTheme();
 
   //user menu
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -48,30 +44,45 @@ const Navbar = (props: Props) => {
   };
 
   return (
-    <Box bgcolor={theme.palette.primary.main} padding="1rem">
+    <Box
+      padding="1rem"
+      position="fixed"
+      width="100%"
+      zIndex="1000"
+      sx={{
+        background:
+          "linear-gradient(90deg, rgba(71,0,26,1) 0%, rgba(214,16,55,1) 35%, rgba(255,91,110,1) 100%)",
+      }}
+    >
       <FlexBetween>
         <FlexBetween>
-          <CookieOutlined sx={{ fontSize: "2rem" }} />
+          <CookieOutlined
+            sx={{ fontSize: "2rem", color: "primary.contrastText" }}
+          />
           <Typography
             variant="h1"
             ml="0.5rem"
             onClick={() => router.navigate("/")}
+            color="primary.contrastText"
             sx={{
               "&:hover": {
                 cursor: "pointer",
-                color: theme.palette.secondary.dark,
               },
             }}
           >
             Waffles
           </Typography>
         </FlexBetween>
-        <FlexBetween>
+        <FlexBetween gap="2rem">
           <IconButton onClick={changeMode}>
             {mode === "dark" ? (
-              <DarkModeOutlined sx={{ fontSize: "2rem" }} />
+              <DarkModeOutlined
+                sx={{ fontSize: "2rem", color: "primary.contrastText" }}
+              />
             ) : (
-              <LightModeOutlined sx={{ fontSize: "2rem" }} />
+              <LightModeOutlined
+                sx={{ fontSize: "2rem", color: "primary.contrastText" }}
+              />
             )}
           </IconButton>
 
@@ -84,7 +95,20 @@ const Navbar = (props: Props) => {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+              <img
+                src="/user.png"
+                alt="user"
+                style={{ width: "2rem", borderRadius: "50%" }}
+              />
+              <Typography variant="h5" ml="1rem" color="primary.contrastText">
+                {user?.displayName}
+              </Typography>
+              <ArrowDropDownOutlined
+                sx={{
+                  fontSize: "1rem",
+                  color: "primary.contrastText",
+                }}
+              />
             </IconButton>
           </Tooltip>
         </FlexBetween>

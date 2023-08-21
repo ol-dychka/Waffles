@@ -1,35 +1,30 @@
-import { Box, Divider, Link, Typography, useTheme } from "@mui/material";
 import {
-  FavoriteBorderOutlined,
   Favorite,
-  InsertCommentOutlined,
-  ArrowRightOutlined,
+  FavoriteBorderOutlined,
   VolumeMuteOutlined,
 } from "@mui/icons-material";
-import React from "react";
-import { Post } from "../../models/Post";
-import FlexBetween from "../../components/FlexBetween";
-import { Link as RouterLink } from "react-router-dom";
+import { Typography, Box, Divider, useTheme } from "@mui/material";
 import { formatDistance } from "date-fns";
-import { router } from "../../layout/Routes";
-import { useStore } from "../../store/store";
-import { observer } from "mobx-react-lite";
+import React from "react";
+import FlexBetween from "../../components/FlexBetween";
 import ProfileCard from "../common/ProfileCard";
 import StyledBox from "../../components/StyledBox";
+import { Post } from "../../models/Post";
+import { useStore } from "../../store/store";
+import CommentCard from "./CommentCard";
 
 type Props = {
   post: Post;
 };
 
-const PostCard = ({ post }: Props) => {
-  const theme = useTheme();
+const ExtendedPostCard = ({ post }: Props) => {
   const {
     postStore: { updateLike },
     userStore: { user },
   } = useStore();
 
   return (
-    <StyledBox mb="2rem">
+    <StyledBox>
       <FlexBetween>
         <ProfileCard
           profile={post.creator}
@@ -42,16 +37,7 @@ const PostCard = ({ post }: Props) => {
         </Typography>
       </FlexBetween>
       <FlexBetween>
-        <Typography variant="h4">
-          <Link
-            component={RouterLink}
-            to={`/posts/${post.id}`}
-            underline="hover"
-            color="secondary.dark"
-          >
-            {post.title}
-          </Link>
-        </Typography>
+        <Typography variant="h4">{post.title}</Typography>
         {post.category && (
           <Box bgcolor="secondary.main" padding="0.5em" borderRadius="1rem">
             <Typography>{post.category}</Typography>
@@ -59,6 +45,7 @@ const PostCard = ({ post }: Props) => {
         )}
       </FlexBetween>
       <Typography mb="0.5rem">{post.description}</Typography>
+      {/* use image + - loopa */}
       <img
         src={post.image || "/placeholder.png"}
         alt="mock"
@@ -98,31 +85,16 @@ const PostCard = ({ post }: Props) => {
         </FlexBetween>
       </FlexBetween>
       <Divider />
-      <FlexBetween
-        onClick={() => router.navigate(`/posts/${post.id}`)}
-        borderRadius="0.5rem"
-        padding="0.5rem"
-        mt="0.5rem"
-        sx={{
-          "&:hover": {
-            cursor: "pointer",
-            bgcolor: theme.palette.secondary.main,
-            ".MuiTypography-root": {
-              fontWeight: "500",
-            },
-          },
-        }}
-      >
-        <FlexBetween alignItems="center">
-          <InsertCommentOutlined sx={{ fontSize: "1.5rem" }} />
-          <Typography fontSize="1rem" ml="0.5rem">
-            Comments
-          </Typography>
-        </FlexBetween>
-        <ArrowRightOutlined sx={{ fontSize: "1.5rem" }} />
-      </FlexBetween>
+      <Typography fontSize="1rem" m="0.5rem 0 1rem 0.5rem">
+        Comments
+      </Typography>
+      <CommentCard />
+      <CommentCard indent={1} />
+      <CommentCard indent={2} />
+      <CommentCard />
+      <CommentCard indent={1} />
     </StyledBox>
   );
 };
 
-export default observer(PostCard);
+export default ExtendedPostCard;

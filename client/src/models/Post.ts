@@ -1,3 +1,5 @@
+import { Profile } from "./Profile";
+
 export interface Post {
   id: string;
   title: string;
@@ -5,6 +7,9 @@ export interface Post {
   description: string;
   category: string;
   image: string | null;
+  creator: Profile;
+  likes: Profile[];
+  isLiked: boolean;
 }
 
 export class Post implements Post {

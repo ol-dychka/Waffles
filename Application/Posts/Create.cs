@@ -32,13 +32,6 @@ namespace Application.Posts
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.UserName == _userAccessor.GetUsername());
 
-                var like = new Like
-                {
-                    AppUser = user,
-                    Post = request.Post,
-                };
-
-                request.Post.Likes.Add(like);
                 request.Post.Creator = user;
 
                 _context.Posts.Add(request.Post);

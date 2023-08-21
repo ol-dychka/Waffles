@@ -2,6 +2,8 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Post, PostFormValues } from "../models/Post";
 import api from "../api";
 import { v4 as uuid } from "uuid";
+import { store } from "./store";
+import { Profile } from "../models/Profile";
 
 export default class postStore {
   postRegistry = new Map<string, Post>();
@@ -10,6 +12,10 @@ export default class postStore {
 
   constructor() {
     makeAutoObservable(this);
+
+    // make a reaction for selectPost to load comments
+    // from API when details page is opened
+    // it can take a long time to do it as all posts load
   }
 
   get posts() {
@@ -21,18 +27,21 @@ export default class postStore {
 
   loadPosts = async () => {
     this.loading = true;
-    try {
-      const result = await api.Posts.list();
-      runInAction(() => {
-        result.forEach((post) => {
-          this.postRegistry.set(post.id, post);
+    const user = store.userStore.user;
+    if (user) {
+      try {
+        const result = await api.Posts.list();
+        runInAction(() => {
+          result.forEach((post) => {
+            post.isLiked = post.likes.some((l) => l.username === user.username);
+            this.postRegistry.set(post.id, post);
+          });
+          this.loading = false;
         });
-        console.log(this.postRegistry);
-        this.loading = false;
-      });
-    } catch (error) {
-      console.log(error);
-      runInAction(() => (this.loading = false));
+      } catch (error) {
+        console.log(error);
+        runInAction(() => (this.loading = false));
+      }
     }
   };
 
@@ -57,12 +66,17 @@ export default class postStore {
   };
 
   createPost = async (post: PostFormValues) => {
+    const user = store.userStore.user;
+    // have to create before posting to backend
     post.id = uuid();
     post.date = new Date();
     try {
       await api.Posts.create(post);
+      const newPost = new Post(post);
+      newPost.creator = new Profile(user!);
+      newPost.likes = [];
       runInAction(() => {
-        this.postRegistry.set(post.id!, new Post(post));
+        this.postRegistry.set(post.id!, newPost);
       });
     } catch (error) {
       console.log(error);
@@ -75,6 +89,31 @@ export default class postStore {
       runInAction(() => {
         this.postRegistry.delete(id);
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  updateLike = async (id: string) => {
+    const user = store.userStore.user;
+    const post = this.postRegistry.get(id);
+    try {
+      if (post?.isLiked) {
+        runInAction(() => {
+          post.likes = post.likes.filter((l) => l.username !== user?.username);
+          post.isLiked = false;
+        });
+      } else {
+        runInAction(() => {
+          post?.likes.push(new Profile(user!));
+          post!.isLiked = true;
+        });
+      }
+      // calling API later because liking/disliking post should be instant.
+      await api.Posts.like(id);
+      // i guess postRegistry just updates object within itself automatically? we don't really need this next line
+      // that is also the reason i had to use runInAction on post object in if-else block (because it updated postRegistry)
+      //runInAction(() => this.postRegistry.set(id, post!));
     } catch (error) {
       console.log(error);
     }

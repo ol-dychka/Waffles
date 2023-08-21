@@ -1,30 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
-import {
-  Box,
-  Button,
-  Divider,
-  Link,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import { Link as RouterLink } from "react-router-dom";
-import FlexBetween from "../../components/FlexBetween";
-import { Post } from "../../models/Post";
-import { CampaignOutlined, FavoriteBorderOutlined } from "@mui/icons-material";
-import { formatDistance } from "date-fns";
-import { router } from "../../layout/Routes";
-import LoadingComponent from "../../components/LoadingComponent";
+import { Box, useMediaQuery } from "@mui/material";
+import LoadingComponent from "../common/LoadingComponent";
+import ExtendedPostCard from "./ExtendedPostCard";
+import ProfileList from "./ProfileList";
+import Advertisement from "../common/Advertisement";
+import Sticky from "react-sticky-el";
 
 const PostDetails = () => {
+  const isMobile = useMediaQuery("(max-width:750px)");
+
   const { id } = useParams();
 
-  const theme = useTheme();
-
   const {
-    postStore: { loadPost, clearSelectedPost, selectedPost: post, deletePost },
+    postStore: { loadPost, clearSelectedPost, selectedPost: post },
   } = useStore();
 
   useEffect(() => {
@@ -37,64 +28,29 @@ const PostDetails = () => {
   if (!post) return <LoadingComponent text="Loading Post" />;
 
   return (
-    <Box bgcolor="secondary.light" borderRadius="1rem" padding="1rem" mt="3rem">
-      <FlexBetween>
-        <FlexBetween>
-          <img
-            src="/mock-photo.jpg"
-            alt="mock"
-            style={{ borderRadius: "50%", height: "4rem" }}
-          />
-          <Typography>UserName</Typography>
-        </FlexBetween>
-        <Typography>
-          {formatDistance(new Date(post.date + "Z"), new Date(), {
-            addSuffix: true,
-          })}
-        </Typography>
-      </FlexBetween>
-      <FlexBetween>
-        <Typography variant="h2">
-          <Link
-            component={RouterLink}
-            to={`/posts/${post.id}`}
-            underline="hover"
-            color="secondary.dark"
-          >
-            {post.title}
-          </Link>
-        </Typography>
-        <Box bgcolor="secondary.main" padding="0.5em" borderRadius="1rem">
-          <Typography>{post.category}</Typography>
-        </Box>
-      </FlexBetween>
-      <img
-        src="/mock-photo.jpg"
-        alt="mock"
-        style={{ borderRadius: "2rem", width: "40rem" }}
-      />
-      <FlexBetween>
-        <FlexBetween>
-          <FavoriteBorderOutlined sx={{ fontSize: "2rem" }} />
-          <Typography>12</Typography>
-        </FlexBetween>
-        <FlexBetween>
-          <CampaignOutlined sx={{ fontSize: "2rem" }} />
-          <Typography>3</Typography>
-        </FlexBetween>
-      </FlexBetween>
-      <Divider />
-      <Box
-        onClick={() => router.navigate(`/posts/${post.id}`)}
-        sx={{
-          "&:hover": {
-            cursor: "pointer",
-            bgcolor: theme.palette.primary.light,
-          },
-        }}
-      >
-        <Typography>Comments...</Typography>
+    <Box
+      mt="5rem"
+      width="100%"
+      display={isMobile ? "block" : "flex"}
+      gap="0.5rem"
+      justifyContent="space-between"
+    >
+      <Box flexBasis={isMobile ? undefined : "71%"}>
+        <ExtendedPostCard post={post} />
       </Box>
+      {!isMobile && (
+        <Box flexBasis="26%">
+          <ProfileList text="Likes" profiles={post.likes} />
+          <Sticky
+            stickyStyle={{
+              marginTop: "4rem",
+            }}
+            topOffset={-96}
+          >
+            <Advertisement />
+          </Sticky>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -1,5 +1,4 @@
-import { Palette } from "@mui/icons-material";
-import { PaletteMode, ThemeOptions } from "@mui/material";
+import { PaletteMode } from "@mui/material";
 
 // color design tokens export
 export const colorTokens = {
@@ -19,15 +18,15 @@ export const colorTokens = {
     1000: "#000000",
   },
   primary: {
-    100: "#fcdcdd",
-    200: "#f9b9bb",
-    300: "#f7979a",
-    400: "#f47478",
-    500: "#f15156",
-    600: "#c14145",
-    700: "#913134",
-    800: "#602022",
-    900: "#301011",
+    100: "#f9d3da",
+    200: "#f3a8b5",
+    300: "#ed7c90",
+    400: "#e7516b",
+    500: "#e12546",
+    600: "#b41e38",
+    700: "#87162a",
+    800: "#5a0f1c",
+    900: "#2d070e",
   },
 };
 
@@ -49,8 +48,8 @@ export const themeSettings = (mode: PaletteMode) => {
               main: colorTokens.grey[500],
               light: colorTokens.grey[700],
             },
-            zalupa: {
-              dark: colorTokens.grey[100],
+            background: {
+              default: colorTokens.grey[800],
             },
           }
         : {
@@ -62,11 +61,11 @@ export const themeSettings = (mode: PaletteMode) => {
             },
             secondary: {
               dark: colorTokens.grey[700],
-              main: colorTokens.grey[200],
-              light: colorTokens.grey[50],
+              main: colorTokens.grey[100],
+              light: colorTokens.grey[0],
             },
-            zalupa: {
-              dark: colorTokens.grey[100],
+            background: {
+              default: colorTokens.grey[50],
             },
           }),
     },

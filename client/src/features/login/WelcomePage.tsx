@@ -1,7 +1,6 @@
-import { Box, Link, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Link, Typography, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
-import { themeSettings } from "../../theme";
-import { Navigate, Link as RouterLink, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { useStore } from "../../store/store";
@@ -11,11 +10,10 @@ type Props = {};
 
 const WelcomePage = (props: Props) => {
   const {
-    userStore: { isLogged, user },
+    userStore: { isLogged },
   } = useStore();
-  const theme = useTheme();
 
-  const isMobile = useMediaQuery("(max-width:600px)");
+  const isMobile = useMediaQuery("(max-width:750px)");
 
   const location = useLocation();
 

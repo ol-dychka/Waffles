@@ -1,12 +1,12 @@
 import { useMediaQuery, Box } from "@mui/material";
 import React, { useEffect } from "react";
 import Sticky from "react-sticky-el";
-import GoToTop from "../../layout/GoToTop";
+import GoToTop from "../common/GoToTop";
 import Advertisement from "../common/Advertisement";
 import CreatePost from "../posts/CreatePost";
 import PostCard from "../posts/PostCard";
 import ProfileList from "../posts/ProfileList";
-import UserInfo from "../posts/UserInfo";
+import UserInfo from "../common/UserInfo";
 import { useStore } from "../../store/store";
 import { useParams } from "react-router";
 import { observer } from "mobx-react-lite";

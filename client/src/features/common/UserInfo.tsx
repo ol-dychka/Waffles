@@ -1,17 +1,19 @@
-import { Box, Divider, Typography, useTheme } from "@mui/material";
+import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import React, { useState } from "react";
 import { useStore } from "../../store/store";
-import ProfileCard from "../common/ProfileCard";
+import ProfileCard from "./ProfileCard";
 import { Profile } from "../../models/Profile";
 import {
   ArticleOutlined,
   AssignmentIndOutlined,
   PersonOutlineOutlined,
+  SettingsOutlined,
   StarOutlineOutlined,
 } from "@mui/icons-material";
 import { router } from "../../layout/Routes";
 import StyledBox from "../../components/StyledBox";
+import FlexRight from "../../components/FlexRight";
 
 type Props = {
   profile: Profile;
@@ -46,6 +48,18 @@ const UserInfo = ({ profile, isCurrent }: Props) => {
       mb="2rem"
     >
       <ProfileCard profile={profile} isCurrent />
+      <FlexRight>
+        <IconButton onClick={() => router.navigate("/myprofile")}>
+          <SettingsOutlined sx={{ fontSize: "1.2rem" }} />
+        </IconButton>
+        <Typography>Edit Profile</Typography>
+      </FlexRight>
+      <Typography>
+        <b>3</b> Subscriptions
+      </Typography>
+      <Typography>
+        <b>2</b> Followers
+      </Typography>
       <Divider sx={{ marginBottom: "1rem" }} />
       <Typography>{showBio ? bio : formatBio(bio)}</Typography>
 

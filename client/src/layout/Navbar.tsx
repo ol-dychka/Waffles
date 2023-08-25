@@ -48,7 +48,7 @@ const Navbar = (props: Props) => {
       padding="1rem"
       position="fixed"
       width="100%"
-      zIndex="1000"
+      zIndex="7"
       sx={{
         background:
           "linear-gradient(90deg, rgba(71,0,26,1) 0%, rgba(214,16,55,1) 35%, rgba(255,91,110,1) 100%)",
@@ -96,7 +96,7 @@ const Navbar = (props: Props) => {
               aria-expanded={open ? "true" : undefined}
             >
               <img
-                src="/user.png"
+                src={user?.image || "/user.png"}
                 alt="user"
                 style={{ width: "2rem", borderRadius: "50%" }}
               />

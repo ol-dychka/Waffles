@@ -71,12 +71,12 @@ namespace API.Controllers
             return CreateUserObject(user);
         }
 
-        private ActionResult<UserDto> CreateUserObject(AppUser user)
+        private UserDto CreateUserObject(AppUser user)
         {
             return new UserDto
             {
                 DisplayName = user.DisplayName,
-                Image = user.Photo.Url,
+                Image = user?.Photo?.Url,
                 Token = _tokenService.CreateToken(user),
                 Username = user.UserName
             };

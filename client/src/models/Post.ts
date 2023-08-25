@@ -1,4 +1,4 @@
-import { Profile } from "./Profile";
+import { Photo, Profile } from "./Profile";
 
 export interface Post {
   id: string;
@@ -20,10 +20,9 @@ export class Post implements Post {
 
 export class PostFormValues {
   id?: string = undefined;
-  date?: Date;
   title: string = "";
-  description: string = "";
-  image: string = "";
+  description?: string = "";
+  photo?: Blob;
   category: string = "";
 }
 

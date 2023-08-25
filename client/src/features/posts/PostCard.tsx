@@ -59,11 +59,13 @@ const PostCard = ({ post }: Props) => {
         )}
       </FlexBetween>
       <Typography mb="0.5rem">{post.description}</Typography>
-      <img
-        src={post.image || "/placeholder.png"}
-        alt="mock"
-        style={{ borderRadius: "2rem", width: "100%" }}
-      />
+      {post.image && (
+        <img
+          src={post.image}
+          alt="mock"
+          style={{ borderRadius: "2rem", width: "100%" }}
+        />
+      )}
       <FlexBetween m="1rem 0">
         <FlexBetween>
           {post.isLiked ? (

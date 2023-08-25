@@ -6,7 +6,7 @@ using Persistence;
 
 namespace Application.Photos
 {
-    public class Delete
+    public class ProfileDelete
     {
         public class Command : IRequest<Result<Unit>>
         {

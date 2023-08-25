@@ -8,7 +8,7 @@ using Persistence;
 
 namespace Application.Photos
 {
-    public class Add
+    public class ProfileAdd
     {
         public class Command : IRequest<Result<Photo>>
         {

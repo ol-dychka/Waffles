@@ -49,9 +49,9 @@ const PostsDashboard = (props: Props) => {
       </Box>
       <Box flexBasis={isMobile ? undefined : "42%"}>
         <CreatePost />
-        {posts?.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+        {posts?.map((post) => {
+          return <PostCard key={post.id} post={post} />;
+        })}
       </Box>
       {!isMobile && (
         <Box flexBasis="26%">

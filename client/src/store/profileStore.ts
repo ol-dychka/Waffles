@@ -8,6 +8,7 @@ export default class profileStore {
   profile: Profile | null = null;
   userPostRegistry = new Map<string, Post>();
   loading = false;
+  editing = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -57,5 +58,57 @@ export default class profileStore {
 
   clearPosts = () => {
     this.userPostRegistry.clear();
+  };
+
+  uploadPhoto = async (file: Blob) => {
+    this.editing = true;
+    try {
+      const response = await api.Profiles.uploadPhoto(file);
+      const photo = response.data;
+      store.userStore.setImage(photo.url);
+      runInAction(() => {
+        if (this.profile) {
+          this.profile.image = photo.url;
+        }
+        this.editing = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => (this.editing = false));
+    }
+  };
+
+  deletePhoto = async () => {
+    this.editing = true;
+    try {
+      await api.Profiles.deletePhoto();
+      store.userStore.removeImage();
+      runInAction(() => {
+        if (this.profile) this.profile.image = undefined;
+        this.editing = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => (this.editing = false));
+    }
+  };
+
+  updateProfile = async (profile: Partial<Profile>) => {
+    this.editing = true;
+    try {
+      await api.Profiles.updateProfile(profile);
+      runInAction(() => {
+        if (
+          profile.displayName &&
+          profile.displayName !== store.userStore.user?.displayName
+        )
+          store.userStore.setDisplayName(profile.displayName);
+        this.profile = { ...this.profile, ...(profile as Profile) };
+        this.editing = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => (this.editing = false));
+    }
   };
 }

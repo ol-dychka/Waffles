@@ -2,6 +2,7 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Application.Posts;
 using Microsoft.AspNetCore.Authorization;
+using Application.Photos;
 
 namespace API.Controllers
 {
@@ -20,9 +21,9 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost(Post post)
+        public async Task<IActionResult> CreatePost([FromForm] Create.Command command)
         {
-            return HandleResult(await Mediator.Send(new Create.Command { Post = post }));
+            return HandleResult(await Mediator.Send(command));
         }
 
         [Authorize(Policy = "IsPostCreator")]
@@ -44,6 +45,18 @@ namespace API.Controllers
         public async Task<IActionResult> Like(Guid id)
         {
             return HandleResult(await Mediator.Send(new UpdateLike.Command { Id = id }));
+        }
+
+        [HttpPost("photo")]
+        public async Task<IActionResult> Attach([FromForm] PostAdd.Command command)
+        {
+            return HandleResult(await Mediator.Send(command));
+        }
+
+        [HttpDelete("photo/{id}")]
+        public async Task<IActionResult> Detach(string id)
+        {
+            return HandleResult(await Mediator.Send(new PostDelete.Command { Id = id }));
         }
     }
 }

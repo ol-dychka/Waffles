@@ -3,12 +3,14 @@ import { Post, PostFormValues } from "../models/Post";
 import api from "../api";
 import { v4 as uuid } from "uuid";
 import { store } from "./store";
-import { Profile } from "../models/Profile";
+import { Photo, Profile } from "../models/Profile";
 
 export default class postStore {
   postRegistry = new Map<string, Post>();
   selectedPost: Post | undefined = undefined;
+  newPhoto: Photo | undefined = undefined;
   loading = false;
+  uploading = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -66,14 +68,14 @@ export default class postStore {
   };
 
   createPost = async (post: PostFormValues) => {
+    // have to init fields before posting to backend
     const user = store.userStore.user;
-    // have to create before posting to backend
     post.id = uuid();
-    post.date = new Date();
     try {
       await api.Posts.create(post);
       const newPost = new Post(post);
       newPost.creator = new Profile(user!);
+      newPost.date = new Date();
       newPost.likes = [];
       runInAction(() => {
         this.postRegistry.set(post.id!, newPost);

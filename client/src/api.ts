@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import { Post, PostFormValues } from "./models/Post";
 import { User, UserFormValues } from "./models/User";
 import { store } from "./store/store";
-import { Profile } from "./models/Profile";
+import { Photo, Profile } from "./models/Profile";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -36,7 +36,19 @@ const requests = {
 const Posts = {
   list: () => requests.get<Post[]>("/posts"),
   single: (id: string) => requests.get<Post>(`/posts/${id}`),
-  create: (post: PostFormValues) => requests.post<void>("/posts", post),
+  create: (post: PostFormValues) => {
+    let formData = new FormData();
+
+    if (post.photo) formData.append("File", post.photo!);
+    formData.append("Id", post.id!);
+    formData.append("Title", post.title);
+    if (post.description) formData.append("Description", post.description);
+    formData.append("Category", post.category);
+
+    return axios.post<void>("/posts", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
   delete: (id: string) => requests.del<void>(`/posts/${id}`),
   like: (id: string) => requests.post<void>(`/posts/${id}/like`, {}),
 };
@@ -52,6 +64,16 @@ const Profiles = {
   get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
   posts: (username: string) =>
     requests.get<Post[]>(`/profiles/${username}/posts`),
+  uploadPhoto: (file: Blob) => {
+    let formData = new FormData();
+    formData.append("File", file);
+    return axios.post<Photo>("/photos", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  },
+  deletePhoto: () => requests.del("/photos"),
+  updateProfile: (profile: Partial<Profile>) =>
+    requests.put("/profiles/edit", profile),
 };
 
 const api = {

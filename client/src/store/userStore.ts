@@ -54,4 +54,16 @@ export default class userStore {
     this.user = null;
     //router.navigate("/welcome");
   };
+
+  setImage = (image: string) => {
+    this.user!.image = image;
+  };
+
+  removeImage = () => {
+    this.user!.image = undefined;
+  };
+
+  setDisplayName = (displayName: string) => {
+    if (this.user) this.user.displayName = displayName;
+  };
 }

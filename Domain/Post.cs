@@ -16,6 +16,6 @@ namespace Domain
         public AppUser Creator { get; set; }
         public ICollection<Like> Likes { get; set; } = new List<Like>();
         public ICollection<Photo> Photos { get; set; } = new List<Photo>();
-        // likes + comments
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

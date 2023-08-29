@@ -12,6 +12,7 @@ import StyledBox from "../../components/StyledBox";
 import { Post } from "../../models/Post";
 import { useStore } from "../../store/store";
 import CommentCard from "./CommentCard";
+import PostChat from "./PostChat";
 
 type Props = {
   post: Post;
@@ -46,11 +47,13 @@ const ExtendedPostCard = ({ post }: Props) => {
       </FlexBetween>
       <Typography mb="0.5rem">{post.description}</Typography>
       {/* use image + - loopa */}
-      <img
-        src={post.image || "/placeholder.png"}
-        alt="mock"
-        style={{ borderRadius: "2rem", width: "100%" }}
-      />
+      {post.image && (
+        <img
+          src={post.image}
+          alt="mock"
+          style={{ borderRadius: "2rem", width: "100%" }}
+        />
+      )}
       <FlexBetween m="1rem 0">
         <FlexBetween>
           {post.isLiked ? (
@@ -85,14 +88,7 @@ const ExtendedPostCard = ({ post }: Props) => {
         </FlexBetween>
       </FlexBetween>
       <Divider />
-      <Typography fontSize="1rem" m="0.5rem 0 1rem 0.5rem">
-        Comments
-      </Typography>
-      <CommentCard />
-      <CommentCard indent={1} />
-      <CommentCard indent={2} />
-      <CommentCard />
-      <CommentCard indent={1} />
+      <PostChat postId={post.id} />
     </StyledBox>
   );
 };

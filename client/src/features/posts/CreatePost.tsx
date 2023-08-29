@@ -1,7 +1,9 @@
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
@@ -27,18 +29,19 @@ const CreatePost = (props: Props) => {
     postStore: { createPost },
   } = useStore();
 
-  const validationSchema = Yup.object({
-    title: Yup.string().required(),
-    // description: Yup.string().when("image", (image, schema) => {
-    //   if (image === null) return schema.required("Must have description");
-    //   return schema;
-    // }),
-    // image: Yup.string().when("description", (description, schema) => {
-    //   if (description === null) return schema.required("Must have photo");
-    //   return schema;
-    // }),
-    category: Yup.string(),
-  });
+  const [isOpen, setIsOpen] = useState(false);
+  const [files, setFiles] = useState<any>([]);
+  const [cropper, setCropper] = useState<Cropper>();
+
+  const validationSchema = (condition: boolean) =>
+    Yup.object().shape({
+      title: Yup.string().required("Insert Post Title"),
+      description: Yup.string().when([], {
+        is: () => condition === true,
+        then: (schema) => schema.required(""),
+      }),
+      category: Yup.string().required("Choose Category"),
+    });
 
   const initialValues = new PostFormValues();
 
@@ -49,6 +52,8 @@ const CreatePost = (props: Props) => {
           //cleaning
           onSubmitProps.resetForm();
           setIsOpen(false);
+          setCropper(undefined);
+          files.forEach((file: any) => URL.revokeObjectURL(file.preview));
           setFiles([]);
         })
       );
@@ -56,12 +61,11 @@ const CreatePost = (props: Props) => {
       createPost(values);
       onSubmitProps.resetForm();
       setIsOpen(false);
+      setCropper(undefined);
+      files.forEach((file: any) => URL.revokeObjectURL(file.preview));
+      setFiles([]);
     }
   };
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [files, setFiles] = useState<any>([]);
-  const [cropper, setCropper] = useState<Cropper>();
 
   const theme = useTheme();
   return (
@@ -69,7 +73,7 @@ const CreatePost = (props: Props) => {
       <Typography variant="h4">Post your own ideas</Typography>
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={() => validationSchema(files.length === 0)}
         onSubmit={handleFormSubmit}
       >
         {({
@@ -78,17 +82,21 @@ const CreatePost = (props: Props) => {
           isSubmitting,
           dirty,
           values,
+          errors,
+          touched,
           handleChange,
         }) => (
           <Form onSubmit={handleSubmit}>
             <TextField
-              margin="normal"
+              margin="dense"
               fullWidth
               label="Title"
               name="title"
               onChange={handleChange}
               value={values.title}
               onClick={() => setIsOpen(true)}
+              error={Boolean(touched.title) && Boolean(errors.title)}
+              helperText={touched.title && errors.title}
             />
             {isOpen && (
               <Box>
@@ -99,6 +107,10 @@ const CreatePost = (props: Props) => {
                   name="description"
                   onChange={handleChange}
                   value={values.description}
+                  error={
+                    Boolean(touched.description) && Boolean(errors.description)
+                  }
+                  helperText={touched.description && errors.description}
                 />
 
                 <Box height="15rem" mb="0.5rem">
@@ -125,6 +137,9 @@ const CreatePost = (props: Props) => {
                     name="category"
                     value={values.category}
                     onChange={handleChange}
+                    error={
+                      Boolean(touched.category) && Boolean(errors.category)
+                    }
                   >
                     <MenuItem value={Category.Animals}>Animals</MenuItem>
                     <MenuItem value={Category.Food}>Food</MenuItem>
@@ -132,6 +147,9 @@ const CreatePost = (props: Props) => {
                     <MenuItem value={Category.News}>News</MenuItem>
                     <MenuItem value={Category.Sports}>Sports</MenuItem>
                   </Select>
+                  {touched.category && (
+                    <FormHelperText>{errors.category}</FormHelperText>
+                  )}
                 </FormControl>
                 <FlexBetween mt="2rem">
                   <Button
@@ -157,8 +175,13 @@ const CreatePost = (props: Props) => {
                         bgcolor: theme.palette.primary.dark,
                       },
                     }}
+                    disabled={!dirty || !isValid}
                   >
-                    Post
+                    {isSubmitting ? (
+                      <CircularProgress color="secondary" size="1.2rem" />
+                    ) : (
+                      "Post"
+                    )}
                   </Button>
                 </FlexBetween>
               </Box>

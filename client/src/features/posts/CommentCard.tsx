@@ -2,35 +2,76 @@ import React from "react";
 import { Profile } from "../../models/Profile";
 import FlexBetween from "../../components/FlexBetween";
 import { Box, Typography } from "@mui/material";
+import { chatComment } from "../../models/Comment";
+import { Link } from "react-router-dom";
+import { formatDistance, formatDistanceToNow } from "date-fns";
 
 type Props = {
-  profile?: Profile;
-  time?: Date;
-  text?: string;
-  indent?: number;
+  comment: chatComment;
+  setReply: () => void;
 };
 
-const CommentCard = ({ profile, time, text, indent = 0 }: Props) => {
+const CommentCard = ({ comment, setReply }: Props) => {
+  var replies = comment.replies ? comment.replies.length : 0;
+
   return (
-    <Box mt="0.5rem" ml={`${indent * 1.5}rem`}>
-      <FlexBetween>
-        <FlexBetween>
-          <img
-            src={profile?.image || "/user.png"}
-            alt="comm"
-            style={{
-              width: "1.5rem",
-              borderRadius: "50%",
+    <Box mt="0.5rem" ml={`${comment.indent * 1.5}rem`}>
+      <Box display="flex" alignItems="flex-start">
+        <img
+          src={comment.image || "/user.png"}
+          alt="comm"
+          style={{
+            width: "2rem",
+            borderRadius: "50%",
+          }}
+        />
+        <Box>
+          <Box display="flex" gap="0.5rem">
+            <Typography
+              ml="1rem"
+              component={Link}
+              to={`/profiles/${comment.username}`}
+              sx={{
+                textDecoration: "none",
+              }}
+              color="primary"
+              fontWeight="700"
+            >
+              {comment.displayName}
+            </Typography>
+            {/* <Typography>{formatDistanceToNow(comment.createdAt)}</Typography> */}
+            <Typography>
+              {formatDistanceToNow(new Date(comment.createdAt))} ago
+            </Typography>
+            {replies > 0 && (
+              <Typography color="primary">
+                {replies} {replies > 1 ? "Replies" : "Reply"}
+              </Typography>
+            )}
+          </Box>
+          <Box>
+            <Typography ml="1rem" sx={{ wordBreak: "break-word" }}>
+              {comment.body}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      {comment.indent === 0 && (
+        <Box display="flex" justifyContent="right">
+          <Typography
+            mt="-0.5rem"
+            sx={{
+              "&:hover": {
+                cursor: "pointer",
+              },
             }}
-          />
-          <Typography ml="1rem">username</Typography>
-        </FlexBetween>
-        <Typography>time</Typography>
-      </FlexBetween>
-      <Typography ml="1rem">
-        Suscipit ex ratione fugiat tempus hendrerit dui consequatur nunc
-        molestias senectus faucibus.
-      </Typography>
+            color="primary"
+            onClick={setReply}
+          >
+            Reply
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

@@ -25,12 +25,6 @@ const UserInfo = ({ profile, isCurrent }: Props) => {
 
   const [showBio, setShowBio] = useState(false);
 
-  const bio = `Quibusdam illum eu tellus. Sapiente? Sem. Ullam potenti facilisi sociis
-  pariatur ipsum, reprehenderit laboriosam occaecat, deserunt, harum
-  facilisis tortor possimus, sem exercitation, corrupti do proident optio
-  luctus est, harum morbi? Montes fusce ultricies nunc dapibus aliquam
-  quidem eligendi, rem nobis.`;
-
   const formatBio = (bio: string) => {
     if (bio.length > 100) return bio.substring(0, 97) + "...";
     return bio;
@@ -60,10 +54,21 @@ const UserInfo = ({ profile, isCurrent }: Props) => {
       <Typography>
         <b>2</b> Followers
       </Typography>
-      <Divider sx={{ marginBottom: "1rem" }} />
-      <Typography>{showBio ? bio : formatBio(bio)}</Typography>
+      {profile.bio && (
+        <>
+          <Divider sx={{ margin: "0.5rem 0" }} />
+          <Typography
+            whiteSpace="normal"
+            overflow="hidden"
+            textOverflow="ellipsis"
+          >
+            {showBio ? profile.bio : formatBio(profile.bio)}
+          </Typography>
+        </>
+      )}
 
-      {bio.length > 100 &&
+      {profile.bio &&
+        profile.bio.length > 100 &&
         (showBio ? (
           <Typography
             color="primary"

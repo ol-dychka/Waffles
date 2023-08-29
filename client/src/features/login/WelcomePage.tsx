@@ -5,6 +5,7 @@ import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
+import StyledBox from "../../components/StyledBox";
 
 type Props = {};
 
@@ -13,7 +14,7 @@ const WelcomePage = (props: Props) => {
     userStore: { isLogged },
   } = useStore();
 
-  const isMobile = useMediaQuery("(max-width:750px)");
+  const isMobile = useMediaQuery("(max-width:1000px)");
 
   const location = useLocation();
 
@@ -29,12 +30,16 @@ const WelcomePage = (props: Props) => {
       alignItems="center"
       gap="3rem"
     >
-      <Box width="30%">
-        <Typography fontSize="6rem" fontWeight="700">
-          WELCOME TO WAFFLES
+      <Box flexBasis="30%">
+        <Typography
+          fontSize="5rem"
+          fontWeight="700"
+          textAlign={isMobile ? "center" : "right"}
+        >
+          WELCOME TO WAFFLES!
         </Typography>
       </Box>
-      <Box>
+      <StyledBox flexBasis="60%">
         {isLogin ? <LoginForm /> : <RegisterForm />}
 
         <Link onClick={() => setIsLogin(!isLogin)}>
@@ -42,7 +47,7 @@ const WelcomePage = (props: Props) => {
             ? "Don't have an account? Register"
             : "Already have an account? Log in"}
         </Link>
-      </Box>
+      </StyledBox>
     </Box>
   );
 };

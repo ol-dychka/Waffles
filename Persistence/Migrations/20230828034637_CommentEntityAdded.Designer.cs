@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230828034637_CommentEntityAdded")]
+    partial class CommentEntityAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.10");
@@ -104,22 +107,22 @@ namespace Persistence.Migrations
                     b.Property<string>("Body")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("PostId")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ReplyToId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AuthorId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("CommentId");
 
-                    b.HasIndex("ReplyToId");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comments");
                 });
@@ -331,20 +334,18 @@ namespace Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
+                    b.HasOne("Domain.Comment", null)
+                        .WithMany("Replies")
+                        .HasForeignKey("CommentId");
+
                     b.HasOne("Domain.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Domain.Comment", "ReplyTo")
-                        .WithMany("Replies")
-                        .HasForeignKey("ReplyToId");
-
                     b.Navigation("Author");
 
                     b.Navigation("Post");
-
-                    b.Navigation("ReplyTo");
                 });
 
             modelBuilder.Entity("Domain.Like", b =>

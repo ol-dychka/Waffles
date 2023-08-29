@@ -2,14 +2,17 @@ import React from "react";
 import { UserFormValues } from "../../models/User";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
-import { Button, TextField } from "@mui/material";
+import { Button, CircularProgress, TextField, useTheme } from "@mui/material";
 import { useStore } from "../../store/store";
+import { observer } from "mobx-react-lite";
 
 type Props = {};
 
 const LoginForm = (props: Props) => {
+  const theme = useTheme();
+
   const {
-    userStore: { login },
+    userStore: { login, logging },
   } = useStore();
 
   const initialValues: UserFormValues = {
@@ -18,7 +21,7 @@ const LoginForm = (props: Props) => {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().required(),
+    email: Yup.string().email().required(),
     password: Yup.string().required(),
   });
 
@@ -33,7 +36,7 @@ const LoginForm = (props: Props) => {
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
     >
-      {({ handleSubmit, values, handleChange }) => (
+      {({ handleSubmit, values, handleChange, isValid, dirty }) => (
         <Form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -41,6 +44,7 @@ const LoginForm = (props: Props) => {
             name="email"
             value={values.email}
             onChange={handleChange}
+            margin="dense"
           />
           <TextField
             fullWidth
@@ -48,12 +52,31 @@ const LoginForm = (props: Props) => {
             name="password"
             value={values.password}
             onChange={handleChange}
+            margin="dense"
           />
-          <Button type="submit">Log In</Button>
+          <Button
+            type="submit"
+            sx={{
+              margin: "0.5rem 0",
+              borderRadius: "1rem",
+              bgcolor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              "&:hover": {
+                bgcolor: theme.palette.primary.dark,
+              },
+            }}
+            disabled={!dirty || !isValid || logging}
+          >
+            {logging ? (
+              <CircularProgress color="secondary" size="1.2rem" />
+            ) : (
+              "Login"
+            )}
+          </Button>
         </Form>
       )}
     </Formik>
   );
 };
 
-export default LoginForm;
+export default observer(LoginForm);

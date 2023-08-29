@@ -1,3 +1,4 @@
+using Application.Comments;
 using Application.Posts;
 using AutoMapper;
 using Domain;
@@ -16,10 +17,15 @@ namespace Application.Core
             CreateMap<Like, Profiles.Profile>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
                 .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
-                .ForMember(d => d.Bio, o => o.MapFrom(s => s.AppUser.Bio));
+                .ForMember(d => d.Bio, o => o.MapFrom(s => s.AppUser.Bio))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photo.Url));
             CreateMap<AppUser, Profiles.Profile>()
                 .ForMember(d => d.Username, o => o.MapFrom(s => s.UserName))
                 .ForMember(d => d.Image, o => o.MapFrom(s => s.Photo.Url));
+            CreateMap<Comment, CommentDto>().PreserveReferences()
+                .ForMember(d => d.Username, o => o.MapFrom(s => s.Author.UserName))
+                .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
+                .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photo.Url));
         }
     }
 }

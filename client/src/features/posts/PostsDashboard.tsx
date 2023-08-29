@@ -20,13 +20,15 @@ const PostsDashboard = (props: Props) => {
   const {
     postStore: { loadPosts, loading, posts, postRegistry },
     userStore: { user },
+    profileStore: { profile, loadProfile },
   } = useStore();
 
   useEffect(() => {
     if (postRegistry.size <= 1) loadPosts();
-  }, [loadPosts, postRegistry.size]);
+    loadProfile(user!.username);
+  }, [loadPosts, postRegistry.size, user, loadProfile]);
 
-  if (loading || postRegistry.size < 1)
+  if (loading || postRegistry.size < 1 || profile === undefined)
     return <LoadingComponent text="Loading Posts" />;
 
   return (
@@ -44,7 +46,7 @@ const PostsDashboard = (props: Props) => {
           }}
           topOffset={-97}
         >
-          <UserInfo profile={new Profile(user!)} isCurrent />
+          {profile && <UserInfo profile={profile} isCurrent />}
         </Sticky>
       </Box>
       <Box flexBasis={isMobile ? undefined : "42%"}>

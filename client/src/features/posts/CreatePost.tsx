@@ -21,6 +21,7 @@ import StyledBox from "../../components/StyledBox";
 import PhotoDropzone from "../common/PhotoDropzone";
 import PhotoCropper from "../common/PhotoCropper";
 import { observer } from "mobx-react-lite";
+import StyledButton from "../common/StyledButton";
 
 type Props = {};
 
@@ -152,37 +153,17 @@ const CreatePost = (props: Props) => {
                   )}
                 </FormControl>
                 <FlexBetween mt="2rem">
-                  <Button
-                    onClick={() => setIsOpen(false)}
-                    sx={{
-                      borderRadius: "1rem",
-                      bgcolor: theme.palette.secondary.main,
-                      color: theme.palette.secondary.contrastText,
-                      "&:hover": {
-                        bgcolor: theme.palette.secondary.light,
-                      },
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    sx={{
-                      borderRadius: "1rem",
-                      bgcolor: theme.palette.primary.main,
-                      color: theme.palette.primary.contrastText,
-                      "&:hover": {
-                        bgcolor: theme.palette.primary.dark,
-                      },
-                    }}
+                  <StyledButton
+                    text="Cancel"
+                    handleClick={() => setIsOpen(false)}
+                    secondary
+                  />
+                  <StyledButton
+                    text="Post"
+                    submit
                     disabled={!dirty || !isValid}
-                  >
-                    {isSubmitting ? (
-                      <CircularProgress color="secondary" size="1.2rem" />
-                    ) : (
-                      "Post"
-                    )}
-                  </Button>
+                    loading={isSubmitting}
+                  />
                 </FlexBetween>
               </Box>
             )}

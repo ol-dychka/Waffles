@@ -1,5 +1,5 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { Profile } from "../models/Profile";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
+import { Predicate, Profile } from "../models/Profile";
 import api from "../api";
 import { Post } from "../models/Post";
 import { store } from "./store";
@@ -9,9 +9,19 @@ export default class profileStore {
   userPostRegistry = new Map<string, Post>();
   loading = false;
   editing = false;
+  followings: Profile[] = [];
+  loadingFollowings = false;
+  predicate = Predicate.Followers;
 
   constructor() {
     makeAutoObservable(this);
+
+    reaction(
+      () => this.predicate,
+      (predicate) => {
+        if (this.profile) this.loadFollowings(this.profile.username, predicate);
+      }
+    );
   }
 
   get posts() {
@@ -20,6 +30,10 @@ export default class profileStore {
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
   }
+
+  setPredicate = (predicate: Predicate) => {
+    this.predicate = predicate;
+  };
 
   loadProfile = async (username: string) => {
     this.loading = true;
@@ -83,8 +97,9 @@ export default class profileStore {
     try {
       await api.Profiles.deletePhoto();
       store.userStore.removeImage();
+      // freezes ???
       runInAction(() => {
-        if (this.profile) this.profile.image = undefined;
+        this.profile!.image = undefined;
         this.editing = false;
       });
     } catch (error) {
@@ -109,6 +124,74 @@ export default class profileStore {
     } catch (error) {
       console.log(error);
       runInAction(() => (this.editing = false));
+    }
+  };
+
+  updateFollowing = async (username: string, setTo: boolean) => {
+    this.editing = true;
+    try {
+      await api.Profiles.updateFollowing(username);
+      store.postStore.updateFollowing(username);
+      runInAction(() => {
+        this.updatePostFollowing(username);
+        this.updateSelfFollowings(setTo);
+        if (
+          this.profile &&
+          this.profile.username !== store.userStore.user?.username
+        ) {
+          setTo ? this.profile.followersCount++ : this.profile.followersCount--;
+          this.profile.following = !this.profile.following;
+        }
+        this.followings.forEach((profile) => {
+          if (profile.username === username) {
+            profile.following
+              ? profile.followersCount--
+              : profile.followersCount++;
+            profile.following = !profile.following;
+          }
+        });
+        this.editing = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => (this.editing = false));
+    }
+  };
+
+  updatePostFollowing = (username: string) => {
+    this.userPostRegistry.forEach((post) => {
+      post.creator!.following = !post.creator!.following;
+      post.likes.forEach((like) => {
+        if (like.username === username) {
+          like.following ? like.followersCount-- : like.followersCount++;
+          like.following = !like.following;
+        }
+      });
+    });
+  };
+
+  loadFollowings = async (username: string, predicate: string) => {
+    this.loadingFollowings = true;
+    try {
+      const followings = await api.Profiles.listFollowings(username, predicate);
+      runInAction(() => {
+        this.followings = followings;
+        this.loadingFollowings = false;
+      });
+    } catch (error) {
+      console.log(error);
+      runInAction(() => (this.loadingFollowings = false));
+    }
+  };
+
+  updateSelfFollowings = (setTo: boolean) => {
+    if (
+      this.profile &&
+      this.profile.username === store.userStore.user?.username
+    ) {
+      setTo
+        ? this.profile.subscriptionsCount++
+        : this.profile.subscriptionsCount--;
     }
   };
 }

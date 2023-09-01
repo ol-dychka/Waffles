@@ -12,5 +12,7 @@ namespace Domain
         public string Bio { get; set; }
         public ICollection<Post> Posts { get; set; } = new List<Post>();
         public Photo Photo { get; set; }
+        public ICollection<UserFollowing> Followers { get; set; }
+        public ICollection<UserFollowing> Subscriptions { get; set; }
     }
 }

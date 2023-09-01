@@ -1,23 +1,14 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  TextField,
-  Typography,
-  useTheme,
-} from "@mui/material";
-import React, { SyntheticEvent, useEffect, useState } from "react";
+import { Box, Divider, TextField, Typography, useTheme } from "@mui/material";
+import React, { useEffect, useState } from "react";
 import FlexBetween from "../../components/FlexBetween";
 import { Profile } from "../../models/Profile";
 import { useStore } from "../../store/store";
 import FlexRight from "../../components/FlexRight";
+import StyledButton from "../common/StyledButton";
 
 type Props = { profile: Profile; setEditImage: (mode: boolean) => void };
 
 const ProfileHeader = ({ profile, setEditImage }: Props) => {
-  const theme = useTheme();
-
   const {
     profileStore: { deletePhoto, editing, updateProfile },
   } = useStore();
@@ -26,17 +17,16 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
   const [displayName, setDisplayName] = useState("");
   const [bio, setBio] = useState<string | undefined>("");
 
-  const handleDelete = (e: SyntheticEvent) => {
-    setTarget(e.currentTarget.id);
+  const handleDelete = (id: string) => {
+    setTarget(id);
     deletePhoto();
   };
 
-  const handleSetDisplayName = (e: SyntheticEvent, displayName: string) => {
-    setTarget(e.currentTarget.id);
+  const handleSetDisplayName = (id: string, displayName: string) => {
+    setTarget(id);
     const newProfile: Partial<Profile> = {
       displayName: displayName,
     };
-    console.log(newProfile);
     updateProfile(newProfile);
   };
 
@@ -44,12 +34,11 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
     setDisplayName(e.target.value);
   };
 
-  const handleSetBio = (e: SyntheticEvent, bio: string | undefined) => {
-    setTarget(e.currentTarget.id);
+  const handleSetBio = (id: string, bio: string | undefined) => {
+    setTarget(id);
     const newProfile: Partial<Profile> = {
       bio: bio,
     };
-    console.log(newProfile);
     updateProfile(newProfile);
   };
 
@@ -63,6 +52,8 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
       setBio(profile.bio);
     }
   }, [setDisplayName, setBio, profile]);
+
+  console.log(JSON.stringify(profile));
 
   return (
     <Box mb="1rem">
@@ -82,39 +73,18 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
             }}
           />
           <FlexBetween gap="1rem">
-            <Button
-              onClick={() => setEditImage(true)}
-              sx={{
-                borderRadius: "1rem",
-                bgcolor: theme.palette.primary.main,
-                color: theme.palette.primary.contrastText,
-                "&:hover": {
-                  bgcolor: theme.palette.primary.dark,
-                },
-              }}
+            <StyledButton
+              text="Set new"
+              handleClick={() => setEditImage(true)}
               disabled={editing}
-            >
-              Set new
-            </Button>
-            <Button
-              onClick={handleDelete}
-              sx={{
-                borderRadius: "1rem",
-                bgcolor: theme.palette.secondary.main,
-                color: theme.palette.secondary.contrastText,
-                "&:hover": {
-                  bgcolor: theme.palette.secondary.light,
-                },
-              }}
-              id="delete"
-              disabled={editing}
-            >
-              {target === "delete" && editing ? (
-                <CircularProgress color="inherit" size="1.2rem" />
-              ) : (
-                "Delete"
-              )}
-            </Button>
+            />
+            <StyledButton
+              secondary
+              text="Delete"
+              loading={target === "delete" && editing}
+              disabled={editing || profile?.image === null}
+              handleClick={() => handleDelete("delete")}
+            />
           </FlexBetween>
         </Box>
 
@@ -141,25 +111,14 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
                 fullWidth
               />
             </Box>
-            <Button
-              onClick={(e) => handleSetDisplayName(e, displayName)}
-              sx={{
-                borderRadius: "1rem",
-                bgcolor: theme.palette.primary.main,
-                color: theme.palette.primary.contrastText,
-                "&:hover": {
-                  bgcolor: theme.palette.primary.dark,
-                },
-              }}
-              id="displayname"
+            <StyledButton
+              text="Save"
+              handleClick={() =>
+                handleSetDisplayName("displayname", displayName)
+              }
+              loading={editing && target === "displayname"}
               disabled={editing || displayName === profile?.displayName}
-            >
-              {editing && target === "displayname" ? (
-                <CircularProgress color="secondary" size="1.2rem" />
-              ) : (
-                "Save"
-              )}
-            </Button>
+            />
           </FlexRight>
         </Box>
       </FlexBetween>
@@ -173,25 +132,12 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
         fullWidth
         multiline
       />
-      <Button
-        onClick={(e) => handleSetBio(e, bio)}
-        sx={{
-          borderRadius: "1rem",
-          bgcolor: theme.palette.primary.main,
-          color: theme.palette.primary.contrastText,
-          "&:hover": {
-            bgcolor: theme.palette.primary.dark,
-          },
-        }}
-        id="bio"
+      <StyledButton
+        text="Save Bio"
+        handleClick={() => handleSetBio("bio", bio)}
+        loading={editing && target === "bio"}
         disabled={editing || bio === profile?.bio}
-      >
-        {editing && target === "bio" ? (
-          <CircularProgress color="secondary" size="1.2rem" />
-        ) : (
-          "Save Bio"
-        )}
-      </Button>
+      />
     </Box>
   );
 };

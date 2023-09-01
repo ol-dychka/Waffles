@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Core;
+using Application.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
@@ -22,8 +23,10 @@ namespace Application.Posts
         {
             private readonly IMapper _mapper;
             private readonly DataContext _context;
-            public Handler(DataContext context, IMapper mapper)
+            private readonly IUserAccessor _userAccessor;
+            public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor)
             {
+                _userAccessor = userAccessor;
                 _context = context;
                 _mapper = mapper;
             }
@@ -32,7 +35,7 @@ namespace Application.Posts
             {
                 var posts = await _context.Posts
                 .Where(p => p.Creator.UserName == request.Username)
-                    .ProjectTo<PostDto>(_mapper.ConfigurationProvider)
+                    .ProjectTo<PostDto>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
                     .ToListAsync();
 
                 return Result<List<PostDto>>.Success(posts);

@@ -7,6 +7,7 @@ import RequireAuthentication from "./RequireAuthentication";
 import WelcomePage from "../features/login/WelcomePage";
 import ProfilePage from "../features/profile/ProfilePage";
 import ProfileConfigurations from "../features/profile/ProfileConfigurations";
+import FollowingsPage from "../features/profile/FollowingsPage";
 
 export const routes: RouteObject[] = [
   {
@@ -19,6 +20,7 @@ export const routes: RouteObject[] = [
           { path: "/", element: <PostsDashboard /> },
           { path: "posts/:id", element: <PostDetails /> },
           { path: "profiles/:username", element: <ProfilePage /> },
+          { path: "followings/:username", element: <FollowingsPage /> },
           { path: "myprofile", element: <ProfileConfigurations /> },
         ],
       },

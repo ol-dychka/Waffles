@@ -18,7 +18,6 @@ const ProfilePage = (props: Props) => {
   const isMobile = useMediaQuery("(max-width:750px)");
 
   const { username } = useParams<{ username: string }>();
-  console.log(username);
 
   const {
     profileStore: {
@@ -28,16 +27,21 @@ const ProfilePage = (props: Props) => {
       loadPosts,
       posts,
       clearPosts,
+      loadFollowings,
+      loadingFollowings,
+      followings,
     },
+    userStore: { user },
   } = useStore();
 
   useEffect(() => {
     if (username) {
       loadProfile(username);
       loadPosts(username);
+      loadFollowings(username, "friends");
     }
     return () => clearPosts();
-  }, [loadProfile, username]);
+  }, [loadProfile, username, loadPosts, loadFollowings, clearPosts]);
 
   if (loading || profile === null)
     return <LoadingComponent text="Loading Profile" />;
@@ -57,7 +61,7 @@ const ProfilePage = (props: Props) => {
           }}
           topOffset={-97}
         >
-          <UserInfo profile={profile!} isCurrent={false} />
+          <UserInfo profile={profile!} isMe={user?.username === username} />
         </Sticky>
       </Box>
       <Box flexBasis={isMobile ? undefined : "42%"}>
@@ -67,10 +71,14 @@ const ProfilePage = (props: Props) => {
       </Box>
       {!isMobile && (
         <Box flexBasis="26%">
-          <ProfileList
-            text={`${profile.displayName}'s Friend List`}
-            profiles={[]}
-          />
+          {loadingFollowings ? (
+            <div>Placeholder</div>
+          ) : (
+            <ProfileList
+              text={`${profile.displayName}'s Friend List`}
+              profiles={followings}
+            />
+          )}
           <Sticky
             stickyStyle={{
               marginTop: "4rem",

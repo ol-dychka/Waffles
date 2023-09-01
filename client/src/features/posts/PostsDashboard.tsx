@@ -20,13 +20,20 @@ const PostsDashboard = (props: Props) => {
   const {
     postStore: { loadPosts, loading, posts, postRegistry },
     userStore: { user },
-    profileStore: { profile, loadProfile },
+    profileStore: {
+      profile,
+      loadProfile,
+      loadFollowings,
+      loadingFollowings,
+      followings,
+    },
   } = useStore();
 
   useEffect(() => {
     if (postRegistry.size <= 1) loadPosts();
     loadProfile(user!.username);
-  }, [loadPosts, postRegistry.size, user, loadProfile]);
+    loadFollowings(user!.username, "friends");
+  }, [loadPosts, postRegistry.size, user, loadProfile, loadFollowings]);
 
   if (loading || postRegistry.size < 1 || profile === undefined)
     return <LoadingComponent text="Loading Posts" />;
@@ -46,7 +53,7 @@ const PostsDashboard = (props: Props) => {
           }}
           topOffset={-97}
         >
-          {profile && <UserInfo profile={profile} isCurrent />}
+          {profile && <UserInfo profile={profile} isMe />}
         </Sticky>
       </Box>
       <Box flexBasis={isMobile ? undefined : "42%"}>
@@ -57,7 +64,11 @@ const PostsDashboard = (props: Props) => {
       </Box>
       {!isMobile && (
         <Box flexBasis="26%">
-          <ProfileList text="Your Friend List" profiles={[]} />
+          {!loadingFollowings ? (
+            <ProfileList text="Your Friend List" profiles={followings} />
+          ) : (
+            <div>Placeholder</div>
+          )}
           <Sticky
             stickyStyle={{
               marginTop: "4rem",

@@ -120,4 +120,18 @@ export default class postStore {
       console.log(error);
     }
   };
+
+  updateFollowing = (username: string) => {
+    this.postRegistry.forEach((post) => {
+      if (post.creator!.username === username) {
+        post.creator!.following = !post.creator!.following;
+      }
+      post.likes.forEach((like) => {
+        if (like.username === username) {
+          like.following ? like.followersCount-- : like.followersCount++;
+          like.following = !like.following;
+        }
+      });
+    });
+  };
 }

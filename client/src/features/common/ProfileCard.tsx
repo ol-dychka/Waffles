@@ -1,65 +1,91 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { Profile } from "../../models/Profile";
 import FlexBetween from "../../components/FlexBetween";
-import { IconButton, Typography, useTheme } from "@mui/material";
-import { EmailOutlined, MarkEmailReadOutlined } from "@mui/icons-material";
+import {
+  CircularProgress,
+  IconButton,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import {
+  EmailOutlined,
+  MarkEmailReadOutlined,
+  CheckCircleOutlined,
+} from "@mui/icons-material";
 import { router } from "../../layout/Routes";
+import { useStore } from "../../store/store";
+import { observer } from "mobx-react-lite";
 
 type Props = {
-  // profile is optional just for now
-  profile?: Profile;
+  profile: Profile;
   isCurrent?: boolean;
-  isSubscribed?: boolean;
+  isMe?: boolean;
 };
 
-const ProfileCard = ({
-  profile = {
-    username: "mockuser",
-    displayName: "Mock User",
-  },
-  isCurrent = false,
-  isSubscribed = false,
-}: Props) => {
+const ProfileCard = ({ profile, isCurrent = false, isMe = false }: Props) => {
   const theme = useTheme();
+
+  const {
+    profileStore: { updateFollowing, editing },
+  } = useStore();
+
+  const handleFollow = (e: SyntheticEvent, username: string) => {
+    profile.following
+      ? updateFollowing(username, false)
+      : updateFollowing(username, true);
+  };
 
   return (
     <FlexBetween
       mb="0.5rem"
       padding="0.5rem"
       borderRadius="0.5rem"
-      onClick={() => router.navigate(`/profiles/${profile.username}`)}
       sx={{
         "&:hover": {
           bgcolor: theme.palette.secondary.main,
-          cursor: "pointer",
-          ".MuiTypography-root": {
-            fontWeight: "500",
-          },
         },
       }}
     >
-      <img
-        src={profile.image || "/user.png"}
-        alt="pImage"
-        style={{
-          height: "2rem",
-          borderRadius: "50%",
+      <FlexBetween
+        onClick={() => router.navigate(`/profiles/${profile.username}`)}
+        sx={{
+          "&:hover": {
+            cursor: "pointer",
+            ".MuiTypography-root": {
+              fontWeight: "500",
+            },
+          },
         }}
-      />
-      <Typography ml="0.5rem" fontSize="1rem">
-        {profile.displayName}
-      </Typography>
-      {!isCurrent && (
+      >
+        <img
+          src={profile.image || "/user.png"}
+          alt="pImage"
+          style={{
+            height: "2rem",
+            borderRadius: "50%",
+          }}
+        />
+        <Typography ml="0.5rem" fontSize="1rem">
+          {profile.displayName}
+        </Typography>
+      </FlexBetween>
+      {isMe ? (
+        <Typography>You</Typography>
+      ) : isCurrent ? (
+        <div />
+      ) : (
         <IconButton
-        // onClick={() => subscribe()}
+          onClick={(e) => handleFollow(e, profile.username)}
+          disabled={editing}
         >
-          {isSubscribed ? (
-            <MarkEmailReadOutlined
-              sx={{ fontSize: "1.5rem", color: "secondary.contrastText" }}
-            />
+          {editing ? (
+            <CircularProgress color="primary" size="1.2rem" />
           ) : (
-            <EmailOutlined
-              sx={{ fontSize: "1.5rem", color: "secondary.contrastText" }}
+            <CheckCircleOutlined
+              sx={{
+                fontSize: "1.2rem",
+                color: profile.following ? "primary.main" : "secondary",
+              }}
             />
           )}
         </IconButton>
@@ -68,4 +94,4 @@ const ProfileCard = ({
   );
 };
 
-export default ProfileCard;
+export default observer(ProfileCard);

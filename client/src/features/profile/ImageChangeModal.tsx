@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  IconButton,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { Box, IconButton, Typography, useTheme } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import StyledBox from "../../components/StyledBox";
 import FlexBetween from "../../components/FlexBetween";
@@ -15,6 +7,7 @@ import PhotoDropzone from "../common/PhotoDropzone";
 import PhotoCropper from "../common/PhotoCropper";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
+import StyledButton from "../common/StyledButton";
 
 type Props = {
   handleClose: () => void;
@@ -77,38 +70,18 @@ const ImageChangeModal = ({ handleClose }: Props) => {
           )}
         </Box>
         <FlexBetween mt="0.5rem">
-          <Button
-            onClick={() => setFiles([])}
-            sx={{
-              borderRadius: "1rem",
-              bgcolor: theme.palette.secondary.main,
-              color: theme.palette.secondary.contrastText,
-              "&:hover": {
-                bgcolor: theme.palette.secondary.light,
-              },
-            }}
+          <StyledButton
+            text="Back"
+            handleClick={() => setFiles([])}
             disabled={editing || files.length === 0}
-          >
-            Back
-          </Button>
-          <Button
-            onClick={onCrop}
+            secondary
+          />
+          <StyledButton
+            text="Set"
+            handleClick={onCrop}
             disabled={editing || files.length === 0}
-            sx={{
-              borderRadius: "1rem",
-              bgcolor: theme.palette.primary.main,
-              color: theme.palette.primary.contrastText,
-              "&:hover": {
-                bgcolor: theme.palette.primary.dark,
-              },
-            }}
-          >
-            {editing ? (
-              <CircularProgress color="secondary" size="1.2rem" />
-            ) : (
-              "Set"
-            )}
-          </Button>
+            loading={editing}
+          />
         </FlexBetween>
       </StyledBox>
     </Box>

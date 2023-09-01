@@ -20,6 +20,7 @@ import { observer } from "mobx-react-lite";
 import FlexRight from "../../components/FlexRight";
 import LoadingComponent from "../common/LoadingComponent";
 import ProfileHeader from "./ProfileHeader";
+import FollowingsPage from "./FollowingsPage";
 
 type Props = {};
 
@@ -53,7 +54,8 @@ const ProfileConfigurations = (props: Props) => {
       <StyledBox mt="5rem">
         <ProfileHeader profile={profile!} setEditImage={setEditImage} />
         <Divider />
-        <Typography>Subs Followers Friend...</Typography>
+        <Box mb="-6rem" />
+        <FollowingsPage />
       </StyledBox>
     </>
   );

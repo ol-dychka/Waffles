@@ -32,8 +32,8 @@ const PostCard = ({ post }: Props) => {
     <StyledBox mb="2rem">
       <FlexBetween>
         <ProfileCard
-          profile={post.creator}
-          isCurrent={post.creator.username === user?.username}
+          profile={post.creator!}
+          isCurrent={post.creator!.username === user?.username}
         />
         <Typography>
           {formatDistance(new Date(post.date + "Z"), new Date(), {

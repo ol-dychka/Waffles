@@ -3,15 +3,13 @@ import {
   FavoriteBorderOutlined,
   VolumeMuteOutlined,
 } from "@mui/icons-material";
-import { Typography, Box, Divider, useTheme } from "@mui/material";
+import { Typography, Box, Divider } from "@mui/material";
 import { formatDistance } from "date-fns";
-import React from "react";
 import FlexBetween from "../../components/FlexBetween";
 import ProfileCard from "../common/ProfileCard";
 import StyledBox from "../../components/StyledBox";
 import { Post } from "../../models/Post";
 import { useStore } from "../../store/store";
-import CommentCard from "./CommentCard";
 import PostChat from "./PostChat";
 
 type Props = {

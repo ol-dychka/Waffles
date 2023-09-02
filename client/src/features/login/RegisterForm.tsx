@@ -1,4 +1,3 @@
-import React from "react";
 import { UserFormValues } from "../../models/User";
 import * as Yup from "yup";
 import { Form, Formik } from "formik";
@@ -6,9 +5,7 @@ import { Button, CircularProgress, TextField, useTheme } from "@mui/material";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
 
-type Props = {};
-
-const RegisterForm = (props: Props) => {
+const RegisterForm = () => {
   const theme = useTheme();
 
   const {
@@ -30,7 +27,6 @@ const RegisterForm = (props: Props) => {
   });
 
   const handleFormSubmit = (values: UserFormValues) => {
-    console.log(values);
     register(values);
   };
 

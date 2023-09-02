@@ -1,7 +1,5 @@
 import {
   Box,
-  Button,
-  CircularProgress,
   FormControl,
   FormHelperText,
   InputLabel,
@@ -9,10 +7,9 @@ import {
   Select,
   TextField,
   Typography,
-  useTheme,
 } from "@mui/material";
-import { Form, Formik } from "formik";
-import React, { useState } from "react";
+import { Form, Formik, FormikHelpers } from "formik";
+import { useState } from "react";
 import * as Yup from "yup";
 import { Category, PostFormValues } from "../../models/Post";
 import { useStore } from "../../store/store";
@@ -23,15 +20,13 @@ import PhotoCropper from "../common/PhotoCropper";
 import { observer } from "mobx-react-lite";
 import StyledButton from "../common/StyledButton";
 
-type Props = {};
-
-const CreatePost = (props: Props) => {
+const CreatePost = () => {
   const {
     postStore: { createPost },
   } = useStore();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [files, setFiles] = useState<any>([]);
+  const [files, setFiles] = useState<object & { preview?: string }[]>([]);
   const [cropper, setCropper] = useState<Cropper>();
 
   const validationSchema = (condition: boolean) =>
@@ -46,7 +41,10 @@ const CreatePost = (props: Props) => {
 
   const initialValues = new PostFormValues();
 
-  const handleFormSubmit = (values: PostFormValues, onSubmitProps: any) => {
+  const handleFormSubmit = (
+    values: PostFormValues,
+    onSubmitProps: FormikHelpers<PostFormValues>
+  ) => {
     if (cropper) {
       cropper.getCroppedCanvas().toBlob((blob) =>
         createPost({ ...values, photo: blob! }).then(() => {
@@ -54,7 +52,9 @@ const CreatePost = (props: Props) => {
           onSubmitProps.resetForm();
           setIsOpen(false);
           setCropper(undefined);
-          files.forEach((file: any) => URL.revokeObjectURL(file.preview));
+          files.forEach((file: object & { preview?: string }) =>
+            URL.revokeObjectURL(file.preview!)
+          );
           setFiles([]);
         })
       );
@@ -63,12 +63,13 @@ const CreatePost = (props: Props) => {
       onSubmitProps.resetForm();
       setIsOpen(false);
       setCropper(undefined);
-      files.forEach((file: any) => URL.revokeObjectURL(file.preview));
+      files.forEach((file: object & { preview?: string }) =>
+        URL.revokeObjectURL(file.preview!)
+      );
       setFiles([]);
     }
   };
 
-  const theme = useTheme();
   return (
     <StyledBox mb="2rem">
       <Typography variant="h4">Post your own ideas</Typography>
@@ -121,7 +122,7 @@ const CreatePost = (props: Props) => {
                     <>
                       <PhotoCropper
                         setCropper={setCropper}
-                        imagePreview={files[0].preview}
+                        imagePreview={files[0].preview!}
                       />
                     </>
                   )}

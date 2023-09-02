@@ -1,11 +1,13 @@
 import { PaletteMode } from "@mui/material";
 import { makeAutoObservable, reaction } from "mobx";
+import { ServerError } from "../models/ServerError";
 
 export default class appStore {
   // persist mode in cookie
   mode: PaletteMode = "light";
   token: string | null = localStorage.getItem("jwt");
   appLoaded = false;
+  error: ServerError | null = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -23,6 +25,10 @@ export default class appStore {
         }
       }
     );
+  }
+
+  setServerError(error: ServerError) {
+    this.error = error;
   }
 
   changeMode = () => {

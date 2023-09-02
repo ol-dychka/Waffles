@@ -1,11 +1,10 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useStore } from "../../store/store";
 import LoadingComponent from "../common/LoadingComponent";
 import { useParams } from "react-router";
 import StyledBox from "../../components/StyledBox";
 import { observer } from "mobx-react-lite";
 import {
-  Box,
   Button,
   ButtonGroup,
   Divider,
@@ -15,9 +14,7 @@ import {
 import { Predicate } from "../../models/Profile";
 import ProfileCard from "../common/ProfileCard";
 
-type Props = {};
-
-const FollowingsPage = (props: Props) => {
+const FollowingsPage = () => {
   const { username } = useParams<{ username: string }>();
 
   const isMobile = useMediaQuery("(max-width:750px)");

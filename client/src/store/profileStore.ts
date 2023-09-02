@@ -39,7 +39,6 @@ export default class profileStore {
     this.loading = true;
     try {
       const profile = await api.Profiles.get(username);
-      console.log(profile);
       runInAction(() => {
         this.profile = profile;
         this.loading = false;

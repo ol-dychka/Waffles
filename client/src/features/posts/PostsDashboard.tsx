@@ -10,11 +10,8 @@ import Advertisement from "../common/Advertisement";
 import GoToTop from "../common/GoToTop";
 import ProfileList from "./ProfileList";
 import Sticky from "react-sticky-el";
-import { Profile } from "../../models/Profile";
 
-type Props = {};
-
-const PostsDashboard = (props: Props) => {
+const PostsDashboard = () => {
   const isMobile = useMediaQuery("(max-width:750px)");
 
   const {

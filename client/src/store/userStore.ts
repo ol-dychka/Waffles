@@ -20,7 +20,6 @@ export default class userStore {
     this.logging = true;
     try {
       const user = await api.Account.login(creds);
-      console.log(user);
       store.appStore.setToken(user.token);
       runInAction(() => {
         this.user = user;
@@ -28,6 +27,7 @@ export default class userStore {
       });
       router.navigate("/");
     } catch (error) {
+      console.log(error);
       runInAction(() => (this.logging = false));
       throw error;
     }
@@ -40,6 +40,7 @@ export default class userStore {
       runInAction(() => (this.user = user));
       router.navigate("/");
     } catch (error) {
+      console.log(error);
       throw error;
     }
   };

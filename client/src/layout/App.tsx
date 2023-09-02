@@ -7,6 +7,7 @@ import { Outlet } from "react-router";
 import { useStore } from "../store/store";
 import { observer } from "mobx-react-lite";
 import LoadingComponent from "../features/common/LoadingComponent";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const {
@@ -34,13 +35,17 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      {isLogged && <Navbar />}
-      <Box padding="1rem 6%">
-        <Outlet />
-      </Box>
-    </ThemeProvider>
+    <>
+      <ToastContainer position="bottom-left" theme={theme.palette.mode} />
+
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        {isLogged && <Navbar />}
+        <Box padding="1rem 6%">
+          <Outlet />
+        </Box>
+      </ThemeProvider>
+    </>
   );
 }
 

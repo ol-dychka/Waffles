@@ -1,5 +1,5 @@
 import { Box, Link, Typography, useMediaQuery } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
@@ -7,9 +7,7 @@ import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";
 import StyledBox from "../../components/StyledBox";
 
-type Props = {};
-
-const WelcomePage = (props: Props) => {
+const WelcomePage = () => {
   const {
     userStore: { isLogged },
   } = useStore();

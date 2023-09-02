@@ -6,7 +6,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import CommentCard from "./CommentCard";
 import { useStore } from "../../store/store";
 import { Form, Formik } from "formik";
@@ -25,7 +25,6 @@ const PostChat = ({ postId }: Props) => {
     commentStore: {
       createHubConnection,
       clearComments,
-      comments,
       addComment,
       formattedComments,
     },
@@ -39,8 +38,6 @@ const PostChat = ({ postId }: Props) => {
     }
     return () => clearComments();
   }, [postId, createHubConnection, clearComments, addComment]);
-
-  console.log(JSON.stringify(comments));
 
   return (
     <Box>

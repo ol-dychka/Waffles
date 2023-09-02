@@ -1,10 +1,8 @@
 import { KeyboardDoubleArrowUpOutlined } from "@mui/icons-material";
 import { Box, IconButton, useTheme } from "@mui/material";
-import React, { useState } from "react";
+import { useState } from "react";
 
-type Props = {};
-
-const GoToTop = (props: Props) => {
+const GoToTop = () => {
   const theme = useTheme();
 
   const [visible, setVisible] = useState(false);

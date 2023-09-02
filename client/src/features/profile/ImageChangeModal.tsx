@@ -1,5 +1,5 @@
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, IconButton, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import StyledBox from "../../components/StyledBox";
 import FlexBetween from "../../components/FlexBetween";
 import { CloseOutlined } from "@mui/icons-material";
@@ -14,10 +14,8 @@ type Props = {
 };
 
 const ImageChangeModal = ({ handleClose }: Props) => {
-  const [files, setFiles] = useState<any>([]);
+  const [files, setFiles] = useState<object & { preview?: string }[]>([]);
   const [cropper, setCropper] = useState<Cropper>();
-
-  const theme = useTheme();
 
   const {
     profileStore: { uploadPhoto, editing },
@@ -27,7 +25,6 @@ const ImageChangeModal = ({ handleClose }: Props) => {
     if (cropper) {
       cropper.getCroppedCanvas().toBlob((blob) =>
         uploadPhoto(blob!).then(() => {
-          console.log(blob);
           handleClose();
         })
       );
@@ -36,7 +33,9 @@ const ImageChangeModal = ({ handleClose }: Props) => {
 
   useEffect(() => {
     return () => {
-      files.forEach((file: any) => URL.revokeObjectURL(file.preview));
+      files.forEach((file: object & { preview?: string }) =>
+        URL.revokeObjectURL(file.preview!)
+      );
     };
   }, [files]);
 
@@ -65,7 +64,7 @@ const ImageChangeModal = ({ handleClose }: Props) => {
           ) : (
             <PhotoCropper
               setCropper={setCropper}
-              imagePreview={files[0].preview}
+              imagePreview={files[0].preview!}
             />
           )}
         </Box>

@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
 import { Profile } from "../../models/Profile";
 import FlexBetween from "../../components/FlexBetween";
 import {
@@ -7,11 +7,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import {
-  EmailOutlined,
-  MarkEmailReadOutlined,
-  CheckCircleOutlined,
-} from "@mui/icons-material";
+import { CheckCircleOutlined } from "@mui/icons-material";
 import { router } from "../../layout/Routes";
 import { useStore } from "../../store/store";
 import { observer } from "mobx-react-lite";

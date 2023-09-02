@@ -1,4 +1,4 @@
-import { Photo, Profile } from "./Profile";
+import { Profile } from "./Profile";
 
 export interface IPost {
   id: string;

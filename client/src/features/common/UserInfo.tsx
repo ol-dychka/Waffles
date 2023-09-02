@@ -1,22 +1,19 @@
-import { Box, Divider, IconButton, Typography, useTheme } from "@mui/material";
+import { Divider, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useStore } from "../../store/store";
 import ProfileCard from "./ProfileCard";
 import { Predicate, Profile } from "../../models/Profile";
 import {
   ArticleOutlined,
   AssignmentIndOutlined,
-  Diversity1Outlined,
   Diversity3Outlined,
   PeopleOutlineOutlined,
-  PersonOutlineOutlined,
   SettingsOutlined,
   StarOutlineOutlined,
 } from "@mui/icons-material";
 import { router } from "../../layout/Routes";
 import StyledBox from "../../components/StyledBox";
-import FlexRight from "../../components/FlexRight";
 import StyledButton from "./StyledButton";
 import HoverBox from "./HoverBox";
 
@@ -26,8 +23,6 @@ type Props = {
 };
 
 const UserInfo = ({ profile, isMe }: Props) => {
-  const theme = useTheme();
-
   const {
     profileStore: { updateFollowing, editing, setPredicate },
   } = useStore();

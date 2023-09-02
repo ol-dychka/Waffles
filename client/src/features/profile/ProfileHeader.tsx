@@ -1,5 +1,5 @@
-import { Box, Divider, TextField, Typography, useTheme } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Divider, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import FlexBetween from "../../components/FlexBetween";
 import { Profile } from "../../models/Profile";
 import { useStore } from "../../store/store";
@@ -30,7 +30,7 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
     updateProfile(newProfile);
   };
 
-  const handleChangeDisplayName = (e: any) => {
+  const handleChangeDisplayName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisplayName(e.target.value);
   };
 
@@ -42,7 +42,7 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
     updateProfile(newProfile);
   };
 
-  const handleChangeBio = (e: any) => {
+  const handleChangeBio = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBio(e.target.value);
   };
 
@@ -52,8 +52,6 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
       setBio(profile.bio);
     }
   }, [setDisplayName, setBio, profile]);
-
-  console.log(JSON.stringify(profile));
 
   return (
     <Box mb="1rem">

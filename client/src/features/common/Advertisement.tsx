@@ -1,10 +1,7 @@
 import { Divider, Link } from "@mui/material";
-import React from "react";
 import StyledBox from "../../components/StyledBox";
 
-type Props = {};
-
-const Advertisement = (props: Props) => {
+const Advertisement = () => {
   // should return random ad from API and link to API
   return (
     <StyledBox mt="2rem">

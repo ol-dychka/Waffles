@@ -1,10 +1,7 @@
-import React from "react";
-import { Profile } from "../../models/Profile";
-import FlexBetween from "../../components/FlexBetween";
 import { Box, Typography } from "@mui/material";
 import { chatComment } from "../../models/Comment";
 import { Link } from "react-router-dom";
-import { formatDistance, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 
 type Props = {
   comment: chatComment;
@@ -12,7 +9,7 @@ type Props = {
 };
 
 const CommentCard = ({ comment, setReply }: Props) => {
-  var replies = comment.replies ? comment.replies.length : 0;
+  const replies = comment.replies ? comment.replies.length : 0;
 
   return (
     <Box mt="0.5rem" ml={`${comment.indent * 1.5}rem`}>

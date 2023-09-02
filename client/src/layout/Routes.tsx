@@ -1,4 +1,4 @@
-import { RouteObject } from "react-router";
+import { Navigate, RouteObject } from "react-router";
 import App from "./App";
 import PostsDashboard from "../features/posts/PostsDashboard";
 import { createBrowserRouter } from "react-router-dom";
@@ -8,6 +8,8 @@ import WelcomePage from "../features/login/WelcomePage";
 import ProfilePage from "../features/profile/ProfilePage";
 import ProfileConfigurations from "../features/profile/ProfileConfigurations";
 import FollowingsPage from "../features/profile/FollowingsPage";
+import NotFound from "../features/errors/NotFound";
+import ServerError from "../features/errors/ServerError";
 
 export const routes: RouteObject[] = [
   {
@@ -25,6 +27,9 @@ export const routes: RouteObject[] = [
         ],
       },
       { path: "/welcome", element: <WelcomePage /> },
+      { path: "/notfound", element: <NotFound /> },
+      { path: "/servererror", element: <ServerError /> },
+      { path: "*", element: <Navigate replace to="/notfound" /> },
     ],
   },
 ];

@@ -1,28 +1,28 @@
 import { FileUploadOutlined } from "@mui/icons-material";
-import { Icon, Typography, useTheme } from "@mui/material";
-import React, { useCallback } from "react";
+import { Typography, useTheme } from "@mui/material";
+import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
 interface Props {
-  setFiles: (files: any) => void;
+  setFiles: (files: object[]) => void;
 }
 
 function PhotoDropzone({ setFiles }: Props) {
   const theme = useTheme();
 
   const onDrop = useCallback(
-    (acceptedFiles: any) => {
+    (acceptedFiles: object[]) => {
       setFiles(
-        acceptedFiles.map((file: any) =>
+        acceptedFiles.map((file: object) =>
           Object.assign(file, {
-            preview: URL.createObjectURL(file),
+            preview: URL.createObjectURL(file as Blob),
           })
         )
       );
     },
     [setFiles]
   );
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   return (
     <div

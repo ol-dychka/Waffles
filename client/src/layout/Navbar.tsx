@@ -25,9 +25,7 @@ import {
 } from "@mui/icons-material";
 import { router } from "./Routes";
 
-type Props = {};
-
-const Navbar = (props: Props) => {
+const Navbar = () => {
   const {
     appStore: { mode, changeMode },
     userStore: { logout, user },

@@ -16,14 +16,13 @@ export default class commentStore {
   }
 
   get formattedComments() {
-    // console.log(JSON.stringify(this.comments));
     return this.commentDFS(this.comments, 0);
   }
 
   commentDFS = (comments: chatComment[], depth: number) => {
-    var list: chatComment[] = [];
+    let list: chatComment[] = [];
     for (let i = 0; i < comments.length; i++) {
-      let c = comments[i];
+      const c = comments[i];
       c.indent = depth;
       list.push(c);
       if (c.replies === null) continue;
@@ -35,8 +34,8 @@ export default class commentStore {
   createHubConnection = (postId: string) => {
     if (store.postStore.selectedPost) {
       this.hubConnection = new HubConnectionBuilder()
-        .withUrl("http://localhost:5000/chat?postId=" + postId, {
-          accessTokenFactory: () => store.userStore.user?.token!,
+        .withUrl(import.meta.env.VITE_CHAT_URL + "?postId=" + postId, {
+          accessTokenFactory: () => store.userStore.user?.token as string,
         })
         .withAutomaticReconnect()
         .configureLogging(LogLevel.Information)
@@ -75,7 +74,10 @@ export default class commentStore {
     this.stopHubConnection();
   };
 
-  addComment = async (values: any, comment: chatComment) => {
+  addComment = async (
+    values: { body: string; postId?: string; commentId?: number },
+    comment: chatComment
+  ) => {
     values.postId = store.postStore.selectedPost?.id;
     if (comment) values.commentId = comment.id;
     try {

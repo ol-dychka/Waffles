@@ -20,7 +20,11 @@ import PhotoCropper from "../common/PhotoCropper";
 import { observer } from "mobx-react-lite";
 import StyledButton from "../common/StyledButton";
 
-const CreatePost = () => {
+type Props = {
+  disabled?: boolean;
+};
+
+const CreatePost = ({ disabled }: Props) => {
   const {
     postStore: { createPost },
   } = useStore();
@@ -34,7 +38,7 @@ const CreatePost = () => {
       title: Yup.string().required("Insert Post Title"),
       description: Yup.string().when([], {
         is: () => condition === true,
-        then: (schema) => schema.required(""),
+        then: (schema) => schema.required("Description or Image is Required"),
       }),
       category: Yup.string().required("Choose Category"),
     });
@@ -71,7 +75,7 @@ const CreatePost = () => {
   };
 
   return (
-    <StyledBox mb="2rem">
+    <StyledBox mb="1rem" sx={disabled ? { pointerEvents: "none" } : {}}>
       <Typography variant="h4">Post your own ideas</Typography>
       <Formik
         initialValues={initialValues}
@@ -79,14 +83,17 @@ const CreatePost = () => {
         onSubmit={handleFormSubmit}
       >
         {({
-          handleSubmit,
-          isValid,
-          isSubmitting,
-          dirty,
           values,
           errors,
+          isValid,
           touched,
+          dirty,
+          handleSubmit,
           handleChange,
+          handleBlur,
+          isSubmitting,
+          validateForm,
+          resetForm,
         }) => (
           <Form onSubmit={handleSubmit}>
             <TextField
@@ -97,8 +104,9 @@ const CreatePost = () => {
               onChange={handleChange}
               value={values.title}
               onClick={() => setIsOpen(true)}
-              error={Boolean(touched.title) && Boolean(errors.title)}
-              helperText={touched.title && errors.title}
+              helperText={errors.title && touched.title ? errors.title : null}
+              error={errors.title && touched.title ? true : false}
+              onBlur={handleBlur}
             />
             {isOpen && (
               <Box>
@@ -109,10 +117,11 @@ const CreatePost = () => {
                   name="description"
                   onChange={handleChange}
                   value={values.description}
+                  helperText={errors.description ? errors.description : null}
                   error={
-                    Boolean(touched.description) && Boolean(errors.description)
+                    errors.description && touched.description ? true : false
                   }
-                  helperText={touched.description && errors.description}
+                  onBlur={handleBlur}
                 />
 
                 <Box height="15rem" mb="0.5rem">
@@ -121,14 +130,20 @@ const CreatePost = () => {
                   ) : (
                     <>
                       <PhotoCropper
-                        setCropper={setCropper}
+                        setCropper={(cropper) => {
+                          setCropper(cropper);
+                          validateForm(values);
+                        }}
                         imagePreview={files[0].preview!}
                       />
                     </>
                   )}
                 </Box>
 
-                <FormControl fullWidth>
+                <FormControl
+                  fullWidth
+                  error={errors.category && touched.category ? true : false}
+                >
                   <InputLabel id="select-label">Category</InputLabel>
                   <Select
                     labelId="select-label"
@@ -139,9 +154,7 @@ const CreatePost = () => {
                     name="category"
                     value={values.category}
                     onChange={handleChange}
-                    error={
-                      Boolean(touched.category) && Boolean(errors.category)
-                    }
+                    onBlur={handleBlur}
                   >
                     <MenuItem value={Category.Animals}>Animals</MenuItem>
                     <MenuItem value={Category.Food}>Food</MenuItem>
@@ -149,14 +162,17 @@ const CreatePost = () => {
                     <MenuItem value={Category.News}>News</MenuItem>
                     <MenuItem value={Category.Sports}>Sports</MenuItem>
                   </Select>
-                  {touched.category && (
+                  {errors.category && touched.category && (
                     <FormHelperText>{errors.category}</FormHelperText>
                   )}
                 </FormControl>
                 <FlexBetween mt="2rem">
                   <StyledButton
                     text="Cancel"
-                    handleClick={() => setIsOpen(false)}
+                    handleClick={() => {
+                      setIsOpen(false);
+                      resetForm();
+                    }}
                     secondary
                   />
                   <StyledButton

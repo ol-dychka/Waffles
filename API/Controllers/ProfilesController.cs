@@ -1,3 +1,4 @@
+using Application.Core;
 using Application.Posts;
 using Application.Profiles;
 using Domain;
@@ -14,9 +15,9 @@ namespace API.Controllers
         }
 
         [HttpGet("{username}/posts")]
-        public async Task<ActionResult<List<Post>>> GetUserPosts(string username)
+        public async Task<ActionResult<List<Post>>> GetUserPosts(string username, [FromQuery] PagingParams pagingParams)
         {
-            return HandleResult(await Mediator.Send(new UserPosts.Query { Username = username }));
+            return HandlePagedResult(await Mediator.Send(new UserPosts.Query { Username = username, Params = pagingParams }));
         }
 
         [HttpPut("edit")]

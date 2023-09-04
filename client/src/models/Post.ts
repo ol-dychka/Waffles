@@ -46,3 +46,10 @@ export enum Category {
   Animals = "Animals",
   Sports = "Sports",
 }
+
+export enum FilterPredicate {
+  IsFollowed = "isFollowed",
+  IsLiked = "isLiked",
+  Category = "category",
+  All = "all",
+}

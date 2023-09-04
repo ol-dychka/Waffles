@@ -9,7 +9,7 @@ const LoginForm = () => {
   const theme = useTheme();
 
   const {
-    userStore: { login, logging },
+    userStore: { login },
   } = useStore();
 
   const initialValues: UserFormValues = {
@@ -18,8 +18,8 @@ const LoginForm = () => {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email().required(),
-    password: Yup.string().required(),
+    email: Yup.string().email().required("Email is Required"),
+    password: Yup.string().required("Password is Required"),
   });
 
   const handleFormSubmit = (values: UserFormValues) => {
@@ -32,7 +32,17 @@ const LoginForm = () => {
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
     >
-      {({ handleSubmit, values, handleChange, isValid, dirty }) => (
+      {({
+        values,
+        errors,
+        isValid,
+        touched,
+        dirty,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isSubmitting,
+      }) => (
         <Form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -41,6 +51,9 @@ const LoginForm = () => {
             value={values.email}
             onChange={handleChange}
             margin="dense"
+            helperText={errors.email && touched.email ? errors.email : null}
+            error={errors.email && touched.email ? true : false}
+            onBlur={handleBlur}
           />
           <TextField
             fullWidth
@@ -49,6 +62,12 @@ const LoginForm = () => {
             value={values.password}
             onChange={handleChange}
             margin="dense"
+            type="password"
+            helperText={
+              errors.password && touched.password ? errors.password : null
+            }
+            error={errors.password && touched.password ? true : false}
+            onBlur={handleBlur}
           />
           <Button
             type="submit"
@@ -61,9 +80,9 @@ const LoginForm = () => {
                 bgcolor: theme.palette.primary.dark,
               },
             }}
-            disabled={!dirty || !isValid || logging}
+            disabled={!dirty || !isValid || isSubmitting}
           >
-            {logging ? (
+            {isSubmitting ? (
               <CircularProgress color="secondary" size="1.2rem" />
             ) : (
               "Login"

@@ -1,5 +1,5 @@
-import { useMediaQuery, Box } from "@mui/material";
-import { useEffect } from "react";
+import { useMediaQuery, Box, CircularProgress } from "@mui/material";
+import { useEffect, useState } from "react";
 import Sticky from "react-sticky-el";
 import GoToTop from "../common/GoToTop";
 import Advertisement from "../common/Advertisement";
@@ -9,7 +9,11 @@ import UserInfo from "../common/UserInfo";
 import { useStore } from "../../store/store";
 import { useParams } from "react-router";
 import { observer } from "mobx-react-lite";
-import LoadingComponent from "../common/LoadingComponent";
+import UserInfoPlaceholder from "../placeholders/UserInfoPlaceholder";
+import PostCardPlaceholder from "../placeholders/PostCardPlaceholder";
+import InfiniteScroll from "react-infinite-scroller";
+import { PagingParams } from "../../models/Pagination";
+import ProfileListPlaceholder from "../placeholders/ProfileListPlaceholder";
 
 const ProfilePage = () => {
   const isMobile = useMediaQuery("(max-width:750px)");
@@ -19,7 +23,8 @@ const ProfilePage = () => {
   const {
     profileStore: {
       profile,
-      loading,
+      loadingProfile,
+      loadingPosts,
       loadProfile,
       loadPosts,
       posts,
@@ -27,21 +32,31 @@ const ProfilePage = () => {
       loadFollowings,
       loadingFollowings,
       followings,
+      setPagingParams,
+      pagination,
+      userPostRegistry,
     },
     userStore: { user },
   } = useStore();
 
+  const [loadingNext, setLoadingNext] = useState(false);
+
+  const handleGetNext = () => {
+    setLoadingNext(true);
+    setPagingParams(new PagingParams(pagination!.currentPage + 1));
+    console.log(username);
+    loadPosts(username!).then(() => setLoadingNext(false));
+  };
+
   useEffect(() => {
+    clearPosts(); //when username changes
     if (username) {
+      if (userPostRegistry.size === 0) loadPosts(username);
       loadProfile(username);
-      loadPosts(username);
       loadFollowings(username, "friends");
     }
     return () => clearPosts();
-  }, [loadProfile, username, loadPosts, loadFollowings, clearPosts]);
-
-  if (loading || profile === null)
-    return <LoadingComponent text="Loading Profile" />;
+  }, [loadProfile, username, loadFollowings, clearPosts]); //eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Box
@@ -52,29 +67,60 @@ const ProfilePage = () => {
       justifyContent="space-between"
     >
       <Box flexBasis={isMobile ? undefined : "26%"}>
-        <Sticky
-          stickyStyle={{
-            marginTop: "6rem",
-          }}
-          topOffset={-97}
-        >
-          <UserInfo profile={profile!} isMe={user?.username === username} />
-        </Sticky>
+        {loadingProfile || !profile ? (
+          <UserInfoPlaceholder isMe={user?.username === username} />
+        ) : isMobile ? (
+          <UserInfo profile={profile} isMe={user?.username === username} />
+        ) : (
+          <Sticky
+            stickyStyle={{
+              marginTop: "6rem",
+            }}
+            topOffset={-97}
+          >
+            <UserInfo profile={profile} isMe={user?.username === username} />
+          </Sticky>
+        )}
       </Box>
       <Box flexBasis={isMobile ? undefined : "42%"}>
-        {posts?.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
+        {loadingPosts && !loadingNext && userPostRegistry.size === 0 ? (
+          <>
+            <PostCardPlaceholder />
+            <PostCardPlaceholder />
+          </>
+        ) : (
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={handleGetNext}
+            hasMore={
+              !loadingNext &&
+              !!pagination &&
+              pagination.currentPage < pagination.totalPages
+            }
+            initialLoad={false}
+          >
+            {posts?.map((post) => {
+              return <PostCard key={post.id} post={post} />;
+            })}
+          </InfiniteScroll>
+        )}
+        {loadingNext && (
+          <Box display="flex" justifyContent="center">
+            <CircularProgress
+              size="2rem"
+              sx={{
+                color: "secondary.dark",
+              }}
+            />
+          </Box>
+        )}
       </Box>
       {!isMobile && (
         <Box flexBasis="26%">
           {loadingFollowings ? (
-            <div>Placeholder</div>
+            <ProfileListPlaceholder />
           ) : (
-            <ProfileList
-              text={`${profile.displayName}'s Friend List`}
-              profiles={followings}
-            />
+            <ProfileList text="Your Friend List" profiles={followings} />
           )}
           <Sticky
             stickyStyle={{

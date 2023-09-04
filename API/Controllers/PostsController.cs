@@ -3,15 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Application.Photos;
+using Application.Core;
 
 namespace API.Controllers
 {
     public class PostsController : BaseApiController
     {
         [HttpGet]
-        public async Task<ActionResult<List<Post>>> GetPosts()
+        public async Task<ActionResult<List<Post>>> GetPosts([FromQuery] PostParams pagingParams)
         {
-            return HandleResult(await Mediator.Send(new List.Query()));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = pagingParams }));
         }
 
         [HttpGet("{id}")]

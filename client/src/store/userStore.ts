@@ -6,7 +6,6 @@ import { router } from "../layout/Routes";
 
 export default class userStore {
   user: User | null = null;
-  logging = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -17,18 +16,13 @@ export default class userStore {
   }
 
   login = async (creds: UserFormValues) => {
-    this.logging = true;
     try {
       const user = await api.Account.login(creds);
       store.appStore.setToken(user.token);
-      runInAction(() => {
-        this.user = user;
-        this.logging = false;
-      });
+      runInAction(() => (this.user = user));
       router.navigate("/");
     } catch (error) {
       console.log(error);
-      runInAction(() => (this.logging = false));
       throw error;
     }
   };

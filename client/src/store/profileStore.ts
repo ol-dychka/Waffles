@@ -3,15 +3,19 @@ import { Predicate, Profile } from "../models/Profile";
 import api from "../api";
 import { Post } from "../models/Post";
 import { store } from "./store";
+import { Pagination, PagingParams } from "../models/Pagination";
 
 export default class profileStore {
   profile: Profile | null = null;
   userPostRegistry = new Map<string, Post>();
-  loading = false;
+  loadingProfile = false;
+  loadingPosts = false;
   editing = false;
   followings: Profile[] = [];
   loadingFollowings = false;
   predicate = Predicate.Followers;
+  pagination: Pagination | null = null;
+  pagingParams = new PagingParams();
 
   constructor() {
     makeAutoObservable(this);
@@ -31,40 +35,57 @@ export default class profileStore {
     );
   }
 
+  get axiosParams() {
+    const params = new URLSearchParams();
+    params.append("pageNumber", this.pagingParams.pageNumber.toString());
+    params.append("pageSize", this.pagingParams.pageSize.toString());
+
+    return params;
+  }
+
+  setPagingParams = (pagingParams: PagingParams) => {
+    this.pagingParams = pagingParams;
+  };
+
+  setPagination = (pagination: Pagination) => {
+    this.pagination = pagination;
+  };
+
   setPredicate = (predicate: Predicate) => {
     this.predicate = predicate;
   };
 
   loadProfile = async (username: string) => {
-    this.loading = true;
+    this.loadingProfile = true;
     try {
       const profile = await api.Profiles.get(username);
       runInAction(() => {
         this.profile = profile;
-        this.loading = false;
+        this.loadingProfile = false;
       });
     } catch (error) {
       console.log(error);
-      runInAction(() => (this.loading = false));
+      runInAction(() => (this.loadingProfile = false));
     }
   };
 
   loadPosts = async (username: string) => {
-    this.loading = true;
+    this.loadingPosts = true;
     const user = store.userStore.user;
     if (user) {
       try {
-        const result = await api.Profiles.posts(username);
+        const result = await api.Profiles.posts(username, this.axiosParams);
         runInAction(() => {
-          result.forEach((post) => {
+          result.data.data.forEach((post) => {
             post.isLiked = post.likes.some((l) => l.username === user.username);
             this.userPostRegistry.set(post.id, post);
           });
-          this.loading = false;
+          this.setPagination(result.data.pagination);
+          this.loadingPosts = false;
         });
       } catch (error) {
         console.log(error);
-        runInAction(() => (this.loading = false));
+        runInAction(() => (this.loadingPosts = false));
       }
     }
   };
@@ -96,9 +117,10 @@ export default class profileStore {
     try {
       await api.Profiles.deletePhoto();
       store.userStore.removeImage();
-      // freezes ???
+      // does not delete photo from profile
       runInAction(() => {
-        this.profile!.image = undefined;
+        if (this.profile) this.profile.image = undefined;
+        console.log(this.profile?.image);
         this.editing = false;
       });
     } catch (error) {

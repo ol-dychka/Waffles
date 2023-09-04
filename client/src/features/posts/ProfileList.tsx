@@ -1,4 +1,3 @@
-import React from "react";
 import StyledBox from "../../components/StyledBox";
 import { Divider, Typography } from "@mui/material";
 import ProfileCard from "../common/ProfileCard";
@@ -16,7 +15,7 @@ const ProfileList = ({ text, profiles }: Props) => {
   } = useStore();
 
   return (
-    <StyledBox>
+    <StyledBox mb="1rem">
       <Typography variant="h4">{text}</Typography>
       <Divider sx={{ margin: "1rem 0" }} />
       {profiles.map((profile) => (

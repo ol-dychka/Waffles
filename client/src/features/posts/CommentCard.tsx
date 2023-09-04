@@ -36,7 +36,6 @@ const CommentCard = ({ comment, setReply }: Props) => {
             >
               {comment.displayName}
             </Typography>
-            {/* <Typography>{formatDistanceToNow(comment.createdAt)}</Typography> */}
             <Typography>
               {formatDistanceToNow(new Date(comment.createdAt))} ago
             </Typography>

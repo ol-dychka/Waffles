@@ -40,7 +40,14 @@ const WelcomePage = () => {
       <StyledBox flexBasis="60%">
         {isLogin ? <LoginForm /> : <RegisterForm />}
 
-        <Link onClick={() => setIsLogin(!isLogin)}>
+        <Link
+          onClick={() => setIsLogin(!isLogin)}
+          sx={{
+            "&:hover": {
+              cursor: "pointer",
+            },
+          }}
+        >
           {isLogin
             ? "Don't have an account? Register"
             : "Already have an account? Log in"}

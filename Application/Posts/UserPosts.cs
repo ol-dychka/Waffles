@@ -14,12 +14,14 @@ namespace Application.Posts
 {
     public class UserPosts
     {
-        public class Query : IRequest<Result<List<PostDto>>>
+        public class Query : IRequest<Result<PagedList<PostDto>>>
         {
             public string Username { get; set; }
+            public PagingParams Params { get; set; }
+
         }
 
-        public class Handler : IRequestHandler<Query, Result<List<PostDto>>>
+        public class Handler : IRequestHandler<Query, Result<PagedList<PostDto>>>
         {
             private readonly IMapper _mapper;
             private readonly DataContext _context;
@@ -31,14 +33,15 @@ namespace Application.Posts
                 _mapper = mapper;
             }
 
-            public async Task<Result<List<PostDto>>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<PagedList<PostDto>>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var posts = await _context.Posts
-                .Where(p => p.Creator.UserName == request.Username)
+                var query = _context.Posts
+                    .OrderByDescending(d => d.Date)
+                    .Where(p => p.Creator.UserName == request.Username)
                     .ProjectTo<PostDto>(_mapper.ConfigurationProvider, new { currentUsername = _userAccessor.GetUsername() })
-                    .ToListAsync();
+                    .AsQueryable();
 
-                return Result<List<PostDto>>.Success(posts);
+                return Result<PagedList<PostDto>>.Success(await PagedList<PostDto>.CreateAsync(query, request.Params.PageNumber, request.Params.PageSize));
             }
         }
     }

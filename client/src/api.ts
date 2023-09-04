@@ -5,6 +5,7 @@ import { store } from "./store/store";
 import { Photo, Profile } from "./models/Profile";
 import { toast } from "react-toastify";
 import { router } from "./layout/Routes";
+import { PaginatedResult } from "./models/Pagination";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -19,6 +20,14 @@ const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 axios.interceptors.response.use(
   async (response) => {
     if (import.meta.env.DEV) await sleep(1000);
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+      response.data = new PaginatedResult(
+        response.data,
+        JSON.parse(pagination)
+      );
+      return response as AxiosResponse<PaginatedResult<unknown>>;
+    }
     return response;
   },
   (error: AxiosError) => {
@@ -77,7 +86,8 @@ const requests = {
 };
 
 const Posts = {
-  list: () => requests.get<Post[]>("/posts"),
+  list: (params: URLSearchParams) =>
+    axios.get<PaginatedResult<Post[]>>("/posts", { params }),
   single: (id: string) => requests.get<Post>(`/posts/${id}`),
   create: (post: PostFormValues) => {
     const formData = new FormData();
@@ -105,8 +115,10 @@ const Account = {
 
 const Profiles = {
   get: (username: string) => requests.get<Profile>(`/profiles/${username}`),
-  posts: (username: string) =>
-    requests.get<Post[]>(`/profiles/${username}/posts`),
+  posts: (username: string, params: URLSearchParams) =>
+    axios.get<PaginatedResult<Post[]>>(`/profiles/${username}/posts`, {
+      params,
+    }),
   uploadPhoto: (file: Blob) => {
     const formData = new FormData();
     formData.append("File", file);

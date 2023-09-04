@@ -1,10 +1,10 @@
-import { Divider, Link } from "@mui/material";
+import { Divider, Link, Typography } from "@mui/material";
 import StyledBox from "../../components/StyledBox";
 
 const Advertisement = () => {
   // should return random ad from API and link to API
   return (
-    <StyledBox mt="2rem">
+    <StyledBox>
       <img
         src="/mock-ad.jpg"
         alt="ad"
@@ -27,6 +27,7 @@ const Advertisement = () => {
         Ullamco eius turpis ex facilis integer? Blanditiis condimentum
         reiciendis, mattis magnam repudiandae.
       </Link>
+      <Typography color="secondary.main">Sponsored</Typography>
     </StyledBox>
   );
 };

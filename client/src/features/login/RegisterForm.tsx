@@ -9,7 +9,7 @@ const RegisterForm = () => {
   const theme = useTheme();
 
   const {
-    userStore: { register, logging },
+    userStore: { register },
   } = useStore();
 
   const initialValues: UserFormValues = {
@@ -20,10 +20,10 @@ const RegisterForm = () => {
   };
 
   const validationSchema = Yup.object({
-    email: Yup.string().email().required(),
-    password: Yup.string().required(),
-    displayName: Yup.string().required(),
-    username: Yup.string().required(),
+    email: Yup.string().email().required("Email is Required"),
+    displayName: Yup.string().required("Name is Required"),
+    username: Yup.string().required("Username is Required"),
+    password: Yup.string().required("Pasword is Required"),
   });
 
   const handleFormSubmit = (values: UserFormValues) => {
@@ -36,7 +36,17 @@ const RegisterForm = () => {
       validationSchema={validationSchema}
       onSubmit={handleFormSubmit}
     >
-      {({ handleSubmit, values, handleChange, dirty, isValid }) => (
+      {({
+        values,
+        errors,
+        isValid,
+        touched,
+        dirty,
+        handleChange,
+        handleBlur,
+        handleSubmit,
+        isSubmitting,
+      }) => (
         <Form onSubmit={handleSubmit}>
           <TextField
             fullWidth
@@ -45,14 +55,9 @@ const RegisterForm = () => {
             value={values.email}
             onChange={handleChange}
             margin="dense"
-          />
-          <TextField
-            fullWidth
-            label="Password"
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            margin="dense"
+            helperText={errors.email && touched.email ? errors.email : null}
+            error={errors.email && touched.email ? true : false}
+            onBlur={handleBlur}
           />
           <TextField
             fullWidth
@@ -61,6 +66,13 @@ const RegisterForm = () => {
             value={values.displayName}
             onChange={handleChange}
             margin="dense"
+            helperText={
+              errors.displayName && touched.displayName
+                ? errors.displayName
+                : null
+            }
+            error={errors.displayName && touched.displayName ? true : false}
+            onBlur={handleBlur}
           />
           <TextField
             fullWidth
@@ -69,6 +81,25 @@ const RegisterForm = () => {
             value={values.username}
             onChange={handleChange}
             margin="dense"
+            helperText={
+              errors.username && touched.username ? errors.username : null
+            }
+            error={errors.username && touched.username ? true : false}
+            onBlur={handleBlur}
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            name="password"
+            value={values.password}
+            onChange={handleChange}
+            margin="dense"
+            type="password"
+            helperText={
+              errors.password && touched.password ? errors.password : null
+            }
+            error={errors.password && touched.password ? true : false}
+            onBlur={handleBlur}
           />
           <Button
             type="submit"
@@ -81,9 +112,9 @@ const RegisterForm = () => {
                 bgcolor: theme.palette.primary.dark,
               },
             }}
-            disabled={!dirty || !isValid || logging}
+            disabled={!dirty || !isValid || isSubmitting}
           >
-            {logging ? (
+            {isSubmitting ? (
               <CircularProgress color="secondary" size="1.2rem" />
             ) : (
               "Register"

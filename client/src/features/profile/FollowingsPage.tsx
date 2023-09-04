@@ -5,8 +5,10 @@ import { useParams } from "react-router";
 import StyledBox from "../../components/StyledBox";
 import { observer } from "mobx-react-lite";
 import {
+  Box,
   Button,
   ButtonGroup,
+  CircularProgress,
   Divider,
   Typography,
   useMediaQuery,
@@ -22,7 +24,7 @@ const FollowingsPage = () => {
   const {
     profileStore: {
       profile,
-      loading,
+      loadingProfile: loading,
       loadProfile,
       loadFollowings,
       loadingFollowings,
@@ -93,9 +95,13 @@ const FollowingsPage = () => {
         }}
       />
       {loadingFollowings ? (
-        <LoadingComponent text={`Loading ${predicate}`} />
+        <Box display="flex" justifyContent="center" mt="2rem">
+          <CircularProgress color="secondary" />
+        </Box>
       ) : (
-        followings.map((following) => <ProfileCard profile={following} />)
+        followings.map((following) => (
+          <ProfileCard key={profile.username} profile={following} />
+        ))
       )}
     </StyledBox>
   );

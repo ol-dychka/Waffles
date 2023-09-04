@@ -4,9 +4,7 @@ import {
   Favorite,
   InsertCommentOutlined,
   ArrowRightOutlined,
-  VolumeMuteOutlined,
 } from "@mui/icons-material";
-import React from "react";
 import { Post } from "../../models/Post";
 import FlexBetween from "../../components/FlexBetween";
 import { Link as RouterLink } from "react-router-dom";
@@ -53,7 +51,7 @@ const PostCard = ({ post }: Props) => {
           </Link>
         </Typography>
         {post.category && (
-          <Box bgcolor="secondary.main" padding="0.5em" borderRadius="1rem">
+          <Box bgcolor="secondary.main" padding="0.5rem" borderRadius="1rem">
             <Typography>{post.category}</Typography>
           </Box>
         )}
@@ -66,39 +64,33 @@ const PostCard = ({ post }: Props) => {
           style={{ borderRadius: "2rem", width: "100%" }}
         />
       )}
-      <FlexBetween m="1rem 0">
-        <FlexBetween>
-          {post.isLiked ? (
-            <Favorite
-              onClick={() => updateLike(post.id)}
-              color="primary"
-              sx={{
-                fontSize: "2rem",
-                "&:hover": {
-                  cursor: "pointer",
-                },
-              }}
-            />
-          ) : (
-            <FavoriteBorderOutlined
-              onClick={() => updateLike(post.id)}
-              sx={{
-                fontSize: "2rem",
-                "&:hover": {
-                  cursor: "pointer",
-                },
-              }}
-            />
-          )}
-          <Typography ml="0.5rem" fontSize="1rem">
-            {post.likes.length}
-          </Typography>
-        </FlexBetween>
-        <FlexBetween>
-          <Typography fontSize="1rem">3</Typography>
-          <VolumeMuteOutlined sx={{ fontSize: "2rem" }} />
-        </FlexBetween>
-      </FlexBetween>
+      <Box display="flex" alignItems="center" m="0.25rem 0">
+        {post.isLiked ? (
+          <Favorite
+            onClick={() => updateLike(post.id)}
+            color="primary"
+            sx={{
+              fontSize: "2rem",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+          />
+        ) : (
+          <FavoriteBorderOutlined
+            onClick={() => updateLike(post.id)}
+            sx={{
+              fontSize: "2rem",
+              "&:hover": {
+                cursor: "pointer",
+              },
+            }}
+          />
+        )}
+        <Typography ml="0.5rem" fontSize="1rem">
+          {post.likes.length}
+        </Typography>
+      </Box>
       <Divider />
       <FlexBetween
         onClick={() => router.navigate(`/posts/${post.id}`)}

@@ -5,6 +5,7 @@ import { Profile } from "../../models/Profile";
 import { useStore } from "../../store/store";
 import FlexRight from "../../components/FlexRight";
 import StyledButton from "../common/StyledButton";
+import { observer } from "mobx-react-lite";
 
 type Props = { profile: Profile; setEditImage: (mode: boolean) => void };
 
@@ -47,10 +48,8 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
   };
 
   useEffect(() => {
-    if (profile) {
-      setDisplayName(profile.displayName);
-      setBio(profile.bio);
-    }
+    setDisplayName(profile.displayName);
+    setBio(profile.bio);
   }, [setDisplayName, setBio, profile]);
 
   return (
@@ -63,7 +62,7 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
           gap="1rem"
         >
           <img
-            src={profile?.image || "/user.png"}
+            src={profile.image || "/user.png"}
             alt="user-img"
             style={{
               borderRadius: "50%",
@@ -80,7 +79,7 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
               secondary
               text="Delete"
               loading={target === "delete" && editing}
-              disabled={editing || profile?.image === null}
+              disabled={editing || profile.image === null}
               handleClick={() => handleDelete("delete")}
             />
           </FlexBetween>
@@ -92,7 +91,7 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
               Username:
             </Typography>
             <Typography variant="h4" color="secondary.contrastText">
-              {profile?.username}
+              {profile.username}
             </Typography>
           </FlexRight>
           <FlexRight gap="1rem">
@@ -115,7 +114,7 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
                 handleSetDisplayName("displayname", displayName)
               }
               loading={editing && target === "displayname"}
-              disabled={editing || displayName === profile?.displayName}
+              disabled={editing || displayName === profile.displayName}
             />
           </FlexRight>
         </Box>
@@ -134,10 +133,10 @@ const ProfileHeader = ({ profile, setEditImage }: Props) => {
         text="Save Bio"
         handleClick={() => handleSetBio("bio", bio)}
         loading={editing && target === "bio"}
-        disabled={editing || bio === profile?.bio}
+        disabled={editing || bio === profile.bio}
       />
     </Box>
   );
 };
 
-export default ProfileHeader;
+export default observer(ProfileHeader);

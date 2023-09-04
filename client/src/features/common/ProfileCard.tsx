@@ -1,4 +1,4 @@
-import { SyntheticEvent } from "react";
+import { useState } from "react";
 import { Profile } from "../../models/Profile";
 import FlexBetween from "../../components/FlexBetween";
 import {
@@ -21,14 +21,17 @@ type Props = {
 const ProfileCard = ({ profile, isCurrent = false, isMe = false }: Props) => {
   const theme = useTheme();
 
+  const [isUpdating, setIsUpdating] = useState(false);
+
   const {
     profileStore: { updateFollowing, editing },
   } = useStore();
 
-  const handleFollow = (e: SyntheticEvent, username: string) => {
+  const handleFollow = async (username: string) => {
+    setIsUpdating(true);
     profile.following
-      ? updateFollowing(username, false)
-      : updateFollowing(username, true);
+      ? updateFollowing(username, false).then(() => setIsUpdating(false))
+      : updateFollowing(username, true).then(() => setIsUpdating(false));
   };
 
   return (
@@ -71,10 +74,10 @@ const ProfileCard = ({ profile, isCurrent = false, isMe = false }: Props) => {
         <div />
       ) : (
         <IconButton
-          onClick={(e) => handleFollow(e, profile.username)}
+          onClick={() => handleFollow(profile.username)}
           disabled={editing}
         >
-          {editing ? (
+          {editing && isUpdating ? (
             <CircularProgress color="primary" size="1.2rem" />
           ) : (
             <CheckCircleOutlined

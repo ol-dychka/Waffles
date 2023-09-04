@@ -6,7 +6,7 @@ import ImageChangeModal from "./ImageChangeModal";
 import { observer } from "mobx-react-lite";
 import LoadingComponent from "../common/LoadingComponent";
 import ProfileHeader from "./ProfileHeader";
-import FollowingsPage from "./FollowingsPage";
+import FollowingsPage from "../profile/FollowingsPage";
 
 const ProfileConfigurations = () => {
   const {
@@ -20,7 +20,7 @@ const ProfileConfigurations = () => {
     loadProfile(user!.username);
   }, [loadProfile, user]);
 
-  if (loading || profile === undefined)
+  if (loading || profile === null)
     return <LoadingComponent text="Loading Your Profile" />;
 
   return (
@@ -29,7 +29,7 @@ const ProfileConfigurations = () => {
         <ImageChangeModal handleClose={() => setEditImage(false)} />
       )}
       <StyledBox mt="5rem">
-        <ProfileHeader profile={profile!} setEditImage={setEditImage} />
+        <ProfileHeader profile={profile} setEditImage={setEditImage} />
         <Divider />
         <Box mb="-6rem" />
         <FollowingsPage />

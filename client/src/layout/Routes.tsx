@@ -6,7 +6,7 @@ import PostDetails from "../features/posts/PostDetails";
 import RequireAuthentication from "./RequireAuthentication";
 import WelcomePage from "../features/login/WelcomePage";
 import ProfilePage from "../features/profile/ProfilePage";
-import ProfileConfigurations from "../features/profile/ProfileConfigurations";
+import ProfileConfigurations from "../features/currentProfile/ProfileConfigurations";
 import FollowingsPage from "../features/profile/FollowingsPage";
 import NotFound from "../features/errors/NotFound";
 import ServerError from "../features/errors/ServerError";

@@ -10,7 +10,6 @@ import {
   Diversity3Outlined,
   PeopleOutlineOutlined,
   SettingsOutlined,
-  StarOutlineOutlined,
 } from "@mui/icons-material";
 import { router } from "../../layout/Routes";
 import StyledBox from "../../components/StyledBox";
@@ -28,16 +27,22 @@ const UserInfo = ({ profile, isMe }: Props) => {
   } = useStore();
 
   const [showBio, setShowBio] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const formatBio = (bio: string) => {
     if (bio.length > 100) return bio.substring(0, 97) + "...";
     return bio;
   };
 
-  const handleFollow = (username: string) => {
+  const handleFollow = async (username: string) => {
+    setIsUpdating(true);
     profile.following
-      ? updateFollowing(username, false)
-      : updateFollowing(username, true);
+      ? updateFollowing(username, false).then(() => setIsUpdating(false))
+      : updateFollowing(username, true).then(() => setIsUpdating(false));
+    // await new Promise((resolve) => {
+    //   setTimeout(resolve, 1000);
+    // });
+    // setIsUpdating(false);
   };
 
   return (
@@ -62,8 +67,8 @@ const UserInfo = ({ profile, isMe }: Props) => {
           text={profile.following ? "Unfollow" : "Follow"}
           handleClick={() => handleFollow(profile.username)}
           secondary={profile.following}
-          disabled={editing}
-          loading={editing}
+          disabled={editing && isUpdating}
+          loading={editing && isUpdating}
           fullWidth
         />
       )}
@@ -81,7 +86,7 @@ const UserInfo = ({ profile, isMe }: Props) => {
         <>
           <Divider sx={{ margin: "0.5rem 0" }} />
           <Typography
-            whiteSpace="normal"
+            whiteSpace="pre-wrap"
             overflow="hidden"
             textOverflow="ellipsis"
           >
@@ -117,7 +122,7 @@ const UserInfo = ({ profile, isMe }: Props) => {
         ))}
       <Divider sx={{ margin: "1rem 0" }} />
 
-      {isMe && (
+      {!isMe && (
         <HoverBox onClick={() => router.navigate("/")}>
           <ArticleOutlined sx={{ fontSize: "1.5rem" }} />
           <Typography ml="1rem">My Feed</Typography>
@@ -156,13 +161,6 @@ const UserInfo = ({ profile, isMe }: Props) => {
         <Diversity3Outlined sx={{ fontSize: "1.5rem" }} />
         <Typography ml="1rem">Friends</Typography>
       </HoverBox>
-
-      {isMe && (
-        <HoverBox>
-          <StarOutlineOutlined sx={{ fontSize: "1.5rem" }} />
-          <Typography ml="1rem">Liked</Typography>
-        </HoverBox>
-      )}
     </StyledBox>
   );
 };

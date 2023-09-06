@@ -97,5 +97,52 @@ export const themeSettings = (mode: PaletteMode) => {
         fontSize: 14,
       },
     },
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            // scrollbarColor: "#6b6b6b #2b2b2b",
+            "&::-webkit-scrollbar, & *::-webkit-scrollbar": {
+              backgroundColor:
+                mode === "dark" ? colorTokens.grey[700] : colorTokens.grey[0],
+            },
+            "&::-webkit-scrollbar-thumb, & *::-webkit-scrollbar-thumb": {
+              borderRadius: 8,
+              backgroundColor:
+                mode === "dark" ? colorTokens.grey[600] : colorTokens.grey[100],
+              minHeight: 24,
+              border: `3px solid ${
+                mode === "dark" ? colorTokens.grey[700] : colorTokens.grey[0]
+              }`,
+            },
+            "&::-webkit-scrollbar-thumb:focus, & *::-webkit-scrollbar-thumb:focus":
+              {
+                backgroundColor:
+                  mode === "dark"
+                    ? colorTokens.grey[500]
+                    : colorTokens.grey[200],
+              },
+            "&::-webkit-scrollbar-thumb:active, & *::-webkit-scrollbar-thumb:active":
+              {
+                backgroundColor:
+                  mode === "dark"
+                    ? colorTokens.grey[500]
+                    : colorTokens.grey[200],
+              },
+            "&::-webkit-scrollbar-thumb:hover, & *::-webkit-scrollbar-thumb:hover":
+              {
+                backgroundColor:
+                  mode === "dark"
+                    ? colorTokens.grey[500]
+                    : colorTokens.grey[200],
+              },
+            "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
+              backgroundColor:
+                mode === "dark" ? colorTokens.grey[700] : colorTokens.grey[0],
+            },
+          },
+        },
+      },
+    },
   };
 };

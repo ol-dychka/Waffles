@@ -8,3 +8,28 @@ body,
   width: 100%;
   font-family: "Inter", sans-serif;
 }
+
+/* ::-webkit-scrollbar {
+  width: 10px;
+} */
+
+/* Track
+::-webkit-scrollbar-track {
+  background: linear-gradient(
+    0deg,
+    rgba(71, 0, 26, 1) 0%,
+    rgba(214, 16, 55, 1) 35%,
+    rgba(255, 91, 110, 1) 90%
+  );
+} */
+
+/* Handle */
+/* ::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 1rem;
+} */
+
+/* Handle on Hover */
+/* ::-webkit-scrollbar-track:hover {
+  background: #f0f0f0;
+} */

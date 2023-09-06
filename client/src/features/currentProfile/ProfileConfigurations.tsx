@@ -11,7 +11,7 @@ import FollowingsPage from "../profile/FollowingsPage";
 const ProfileConfigurations = () => {
   const {
     userStore: { user },
-    profileStore: { loadProfile, profile, loading },
+    profileStore: { loadProfile, profile, loadingProfile },
   } = useStore();
 
   const [editImage, setEditImage] = useState(false);
@@ -20,7 +20,7 @@ const ProfileConfigurations = () => {
     loadProfile(user!.username);
   }, [loadProfile, user]);
 
-  if (loading || profile === null)
+  if (loadingProfile || profile === null)
     return <LoadingComponent text="Loading Your Profile" />;
 
   return (

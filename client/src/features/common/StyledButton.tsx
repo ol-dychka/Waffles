@@ -1,5 +1,4 @@
 import { Button, CircularProgress, useTheme } from "@mui/material";
-import React from "react";
 
 type Props = {
   text: string;

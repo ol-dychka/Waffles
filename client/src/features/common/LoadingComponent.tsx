@@ -7,7 +7,7 @@ type Props = {
 const LoadingComponent = ({ text }: Props) => {
   return (
     <Box
-      height="90%"
+      height="100vh"
       width="100%"
       display="flex"
       flexDirection="column"

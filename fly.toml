@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for waffles on 2023-09-08T06:31:49-04:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "waffles"
+primary_region = "ams"
+
+[build]
+  image = "zajuk/waffles:latest"
+
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  Cloudinary__CloudName="dhlhcn9vy"
+  Cloudinary__ApiKey="764595365324498"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]

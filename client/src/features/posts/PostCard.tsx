@@ -34,7 +34,7 @@ const PostCard = ({ post }: Props) => {
           isCurrent={post.creator!.username === user?.username}
         />
         <Typography>
-          {formatDistance(new Date(post.date + "Z"), new Date(), {
+          {formatDistance(new Date(post.date), new Date(), {
             addSuffix: true,
           })}
         </Typography>

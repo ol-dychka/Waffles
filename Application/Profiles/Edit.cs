@@ -11,15 +11,16 @@ namespace Application.Profiles
     {
         public class Command : IRequest<Result<Unit>>
         {
-            public string DisplayName { get; set; }
             public string Bio { get; set; }
+            public string DisplayName { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
         {
             public CommandValidator()
             {
-                RuleFor(x => x.DisplayName).NotEmpty();
+                RuleFor(x => x.DisplayName).NotEmpty().When(x => x.Bio == null);
+                RuleFor(x => x.Bio).NotEmpty().When(x => x.DisplayName == null);
             }
         }
 

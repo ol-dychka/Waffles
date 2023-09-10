@@ -4,7 +4,9 @@ import { ServerError } from "../models/ServerError";
 
 export default class appStore {
   // persist mode in cookie
-  mode: PaletteMode = "light";
+  mode: PaletteMode = localStorage.getItem("mode")
+    ? (localStorage.getItem("mode") as PaletteMode)
+    : "light";
   token: string | null = localStorage.getItem("jwt");
   appLoaded = false;
   error: ServerError | null = null;
@@ -23,6 +25,13 @@ export default class appStore {
         } else {
           localStorage.removeItem("jwt");
         }
+      }
+    );
+
+    reaction(
+      () => this.mode,
+      (mode) => {
+        localStorage.setItem("mode", mode);
       }
     );
   }

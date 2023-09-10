@@ -44,7 +44,6 @@ const ProfilePage = () => {
   const handleGetNext = () => {
     setLoadingNext(true);
     setPagingParams(new PagingParams(pagination!.currentPage + 1));
-    console.log(username);
     loadPosts(username!).then(() => setLoadingNext(false));
   };
 

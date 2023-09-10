@@ -120,7 +120,6 @@ export default class profileStore {
       // does not delete photo from profile
       runInAction(() => {
         if (this.profile) this.profile.image = undefined;
-        console.log(this.profile?.image);
         this.editing = false;
       });
     } catch (error) {

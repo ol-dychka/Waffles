@@ -165,12 +165,21 @@ export default class postStore {
 
   updateLike = async (id: string) => {
     const user = store.userStore.user;
-    const post = this.postRegistry.get(id);
+    let post: Post | undefined;
+    if (store.profileStore.userPostRegistry.size > 0) {
+      post = store.profileStore.userPostRegistry.get(id);
+    } else {
+      post = this.postRegistry.get(id);
+    }
+    console.log("updating like");
+    console.log(post);
     try {
       if (post?.isLiked) {
         runInAction(() => {
-          post.likes = post.likes.filter((l) => l.username !== user?.username);
-          post.isLiked = false;
+          post!.likes = post!.likes.filter(
+            (l) => l.username !== user?.username
+          );
+          post!.isLiked = false;
         });
       } else {
         runInAction(() => {

@@ -59,7 +59,7 @@ const ProfilePage = () => {
 
   return (
     <Box
-      mt="5rem"
+      mt="4rem"
       width="100%"
       display={isMobile ? "block" : "flex"}
       gap="0.5rem"
@@ -73,9 +73,9 @@ const ProfilePage = () => {
         ) : (
           <Sticky
             stickyStyle={{
-              marginTop: "6rem",
+              marginTop: "4.5rem",
             }}
-            topOffset={-97}
+            topOffset={-73}
           >
             <UserInfo profile={profile} isMe={user?.username === username} />
           </Sticky>
@@ -123,9 +123,9 @@ const ProfilePage = () => {
           )}
           <Sticky
             stickyStyle={{
-              marginTop: "4rem",
+              marginTop: "4.5rem",
             }}
-            topOffset={-96}
+            topOffset={-72}
           >
             <Advertisement />
           </Sticky>

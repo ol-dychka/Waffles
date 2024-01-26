@@ -75,7 +75,7 @@ const CreatePost = ({ disabled }: Props) => {
   };
 
   return (
-    <StyledBox mb="1rem" sx={disabled ? { pointerEvents: "none" } : {}}>
+    <StyledBox mb="0.5rem" sx={disabled ? { pointerEvents: "none" } : {}}>
       <Typography variant="h4">Post your own ideas</Typography>
       <Formik
         initialValues={initialValues}

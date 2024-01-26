@@ -41,7 +41,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {isLogged && <Navbar />}
-        <Box padding="1rem 6%">
+        <Box padding="0.5rem 6%">
           <Outlet />
         </Box>
       </ThemeProvider>

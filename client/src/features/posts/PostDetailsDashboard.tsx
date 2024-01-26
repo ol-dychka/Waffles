@@ -29,7 +29,7 @@ const PostDetails = () => {
 
   return (
     <Box
-      mt="5rem"
+      mt="4rem"
       width="100%"
       display={isMobile ? "block" : "flex"}
       gap="0.5rem"
@@ -43,9 +43,9 @@ const PostDetails = () => {
           <ProfileList text="Likes" profiles={post.likes} />
           <Sticky
             stickyStyle={{
-              marginTop: "4rem",
+              marginTop: "4.5rem",
             }}
-            topOffset={-96}
+            topOffset={-72}
           >
             <Advertisement />
           </Sticky>

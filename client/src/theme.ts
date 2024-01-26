@@ -17,7 +17,7 @@ export const colorTokens = {
     900: "#0A0A0A",
     1000: "#000000",
   },
-  primary: {
+  primary_old: {
     100: "#f9d3da",
     200: "#f3a8b5",
     300: "#ed7c90",
@@ -27,6 +27,17 @@ export const colorTokens = {
     700: "#87162a",
     800: "#5a0f1c",
     900: "#2d070e",
+  },
+  primary: {
+    100: "#d7e3f5",
+    200: "#b0c6eb",
+    300: "#88aae0",
+    400: "#618dd6",
+    500: "#3971cc",
+    600: "#2e5aa3",
+    700: "#22447a",
+    800: "#172d52",
+    900: "#0b1729",
   },
 };
 
@@ -77,7 +88,7 @@ export const themeSettings = (mode: PaletteMode) => {
         fontSize: 40,
       },
       h2: {
-        fontFamily: ["Inter", "sans-serif"].join(","),
+        fontFamily: ["Merriweather", "sans-serif"].join(","),
         fontSize: 32,
       },
       h3: {

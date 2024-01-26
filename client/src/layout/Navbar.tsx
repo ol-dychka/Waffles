@@ -43,13 +43,14 @@ const Navbar = () => {
 
   return (
     <Box
-      padding="1rem"
+      paddingY="0.5rem"
+      paddingX="2rem"
       position="fixed"
       width="100%"
       zIndex="7"
       sx={{
         background:
-          "linear-gradient(90deg, rgba(71,0,26,1) 0%, rgba(214,16,55,1) 35%, rgba(255,91,110,1) 100%)",
+          "linear-gradient(90deg, rgba(23,45,82,1) 0%, rgba(34,68,122,1) 35%, rgba(97,141,213,1) 100%)",
       }}
     >
       <FlexBetween>
@@ -58,7 +59,7 @@ const Navbar = () => {
             sx={{ fontSize: "2rem", color: "primary.contrastText" }}
           />
           <Typography
-            variant="h1"
+            variant="h2"
             ml="0.5rem"
             onClick={() => router.navigate("/")}
             color="primary.contrastText"

@@ -45,7 +45,7 @@ const FollowingsPage = () => {
     return <LoadingComponent text="Loading Profile" />;
 
   return (
-    <StyledBox mt="6rem">
+    <StyledBox mt="4rem">
       <Typography variant="h4" textAlign="center">
         Choose one of Options Below
       </Typography>

@@ -36,7 +36,7 @@ const FilterOptions = ({ disabled }: Props) => {
   };
 
   return (
-    <StyledBox mb="1rem" sx={disabled ? { pointerEvents: "none" } : {}}>
+    <StyledBox mb="0.5rem" sx={disabled ? { pointerEvents: "none" } : {}}>
       <ButtonGroup variant="text" color="secondary" fullWidth>
         <Button
           onClick={() => handleSetPredicate(FilterPredicate.IsFollowed)}

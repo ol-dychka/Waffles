@@ -3,8 +3,8 @@ import { styled } from "@mui/system";
 
 const StyledBox = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.light,
-  borderRadius: "1rem",
-  padding: "1rem",
+  borderRadius: "0.5rem",
+  padding: "0.75rem",
 }));
 
 export default StyledBox;

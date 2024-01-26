@@ -27,7 +27,7 @@ const PostCard = ({ post }: Props) => {
   } = useStore();
 
   return (
-    <StyledBox mb="2rem">
+    <StyledBox mb="0.5rem">
       <FlexBetween>
         <ProfileCard
           profile={post.creator!}
@@ -39,7 +39,7 @@ const PostCard = ({ post }: Props) => {
           })}
         </Typography>
       </FlexBetween>
-      <FlexBetween>
+      <FlexBetween mt="-0.5rem">
         <Typography variant="h4">
           <Link
             component={RouterLink}
@@ -51,26 +51,26 @@ const PostCard = ({ post }: Props) => {
           </Link>
         </Typography>
         {post.category && (
-          <Box bgcolor="secondary.main" padding="0.5rem" borderRadius="1rem">
+          <Box bgcolor="secondary.main" padding="0.25rem" borderRadius="1rem">
             <Typography>{post.category}</Typography>
           </Box>
         )}
       </FlexBetween>
-      <Typography mb="0.5rem">{post.description}</Typography>
+      <Typography my="0.5rem">{post.description}</Typography>
       {post.image && (
         <img
           src={post.image}
           alt="mock"
-          style={{ borderRadius: "2rem", width: "100%" }}
+          style={{ borderRadius: "0.5rem", width: "100%" }}
         />
       )}
-      <Box display="flex" alignItems="center" m="0.25rem 0">
+      <Box display="flex" alignItems="center" mb="0.25rem">
         {post.isLiked ? (
           <Favorite
             onClick={() => updateLike(post.id)}
             color="primary"
             sx={{
-              fontSize: "2rem",
+              fontSize: "1.75rem",
               "&:hover": {
                 cursor: "pointer",
               },
@@ -80,7 +80,7 @@ const PostCard = ({ post }: Props) => {
           <FavoriteBorderOutlined
             onClick={() => updateLike(post.id)}
             sx={{
-              fontSize: "2rem",
+              fontSize: "1.75rem",
               "&:hover": {
                 cursor: "pointer",
               },
@@ -94,9 +94,8 @@ const PostCard = ({ post }: Props) => {
       <Divider />
       <FlexBetween
         onClick={() => router.navigate(`/posts/${post.id}`)}
-        borderRadius="0.5rem"
+        borderRadius="0 0 0.5rem 0.5rem"
         padding="0.5rem"
-        mt="0.5rem"
         sx={{
           "&:hover": {
             cursor: "pointer",

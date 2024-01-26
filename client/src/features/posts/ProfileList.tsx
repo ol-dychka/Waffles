@@ -15,7 +15,7 @@ const ProfileList = ({ text, profiles }: Props) => {
   } = useStore();
 
   return (
-    <StyledBox mb="1rem">
+    <StyledBox mb="0.5rem">
       <Typography variant="h4">{text}</Typography>
       <Divider sx={{ margin: "1rem 0" }} />
       {profiles.map((profile) => (

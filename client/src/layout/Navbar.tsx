@@ -19,7 +19,6 @@ import {
   DarkModeOutlined,
   LightModeOutlined,
   Logout,
-  PersonAdd,
   Settings,
   ArrowDropDownOutlined,
 } from "@mui/icons-material";
@@ -112,6 +111,8 @@ const Navbar = () => {
           </Tooltip>
         </FlexBetween>
       </FlexBetween>
+
+      {/* PROFILE DROPDOWN MENU */}
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -147,20 +148,13 @@ const Navbar = () => {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => router.navigate(`/profiles/${user?.username}`)}
+        >
           <Avatar /> Profile
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => router.navigate("/myprofile")}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
